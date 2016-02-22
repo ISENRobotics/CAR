@@ -8,7 +8,7 @@
 
 PWM pwmSwitch(PWM_SWITCH_DIR);
 
-void switch_PWM_source(const rc_car::SwitchMsgConstPtr& switchMsg, ros::Publisher* tRSR_pub)
+void switch_PWM_source(const rc_car::SwitchMsgConstPtr& switchMsg, ros::Publisher * tRSR_pub)
 {
   rc_car::RSRMsg msg;
 
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
   ros::NodeHandle n;
 
   ros::Publisher tRSR_pub = n.advertise<rc_car::RSRMsg>("tRSR", 1000);
-  ros::Subscriber tSwitch_sub = n.subscribe("tSwitchMode", 1000, boost::bind(&switch_PWM_source, _1, &tRSR_pub));
+  ros::Subscriber tSwitch_sub = n.subscribe<rc_car::SwitchMsg>("tSwitchMode", 1000, boost::bind(&switch_PWM_source, _1, &tRSR_pub));
   //ros::Publisher tError_pub = n.advertise<Error>("tError", 1000);
 
   ros::spin();

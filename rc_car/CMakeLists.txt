@@ -8,6 +8,11 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
 )
 
+
+set(Boost_USE_STATIC_LIBS ON) 
+set(Boost_USE_MULTITHREADED ON)  
+set(Boost_USE_STATIC_RUNTIME ON) 
+
 find_package(Boost REQUIRED COMPONENTS bind)
 
 ## Generate messages in the 'msg' folder
