@@ -24,10 +24,10 @@ find_package(Boost COMPONENTS bind)
  )
 
 ## Generate services in the 'srv' folder
-add_service_files(
-   FILES
+#add_service_files(
+ #  FILES
   # AddTwoInts.srv
- )
+ #)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
