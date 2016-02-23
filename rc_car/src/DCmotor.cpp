@@ -87,7 +87,7 @@ int main(int argc, char **argv)
   ros::Subscriber tCommand_sub = n.subscribe("tCommand", 1000, refreshPWM_DCmotor);
   //ros::Publisher tError_pub = n.advertise<Error>("tError", 1000);
 
-  if (n.getParam("/DCmotor_period_speed_max", DCmotor_period_speed_max))
+  if (n.getParam("iDCmotor/DCmotor_period_speed_max", DCmotor_period_speed_max))
   {
     ROS_INFO("iDCmotor got param /DCmotor_period_speed_max: %d\n", DCmotor_period_speed_max);
   }
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
     ROS_ERROR("Failed to get param 'DCmotor_period_speed_max'\n");
   }
 
-  if (n.getParam("/DCmotor_period_speed_0", DCmotor_period_speed_0))
+  if (n.getParam("iDCmotor/DCmotor_period_speed_0", DCmotor_period_speed_0))
   {
     ROS_INFO("iDCmotor got param /DCmotor_period_speed_0: %d\n", DCmotor_period_speed_0);
   }
@@ -105,7 +105,7 @@ int main(int argc, char **argv)
     ROS_ERROR("Failed to get param 'DCmotor_period_speed_0'\n");
   }
 
-  if (n.getParam("/DCmotor_period_speed_min", DCmotor_period_speed_min))
+  if (n.getParam("iDCmotor/DCmotor_period_speed_min", DCmotor_period_speed_min))
   {
     ROS_INFO("iDCmotor got param /DCmotor_period_speed_min: %d\n", DCmotor_period_speed_min);
   }
@@ -114,7 +114,7 @@ int main(int argc, char **argv)
     ROS_ERROR("Failed to get param 'DCmotor_period_speed_min'\n");
   }
 
-  if (n.getParam("/DCmotor_speed_max", DCmotor_speed_max))
+  if (n.getParam("iDCmotor/DCmotor_speed_max", DCmotor_speed_max))
   {
     ROS_INFO("iDCmotor got param /DCmotor_speed_max: %d\n", DCmotor_speed_max);
   }
@@ -123,7 +123,7 @@ int main(int argc, char **argv)
     ROS_ERROR("Failed to get param 'DCmotor_speed_max'\n");
   }
 
-  if (n.getParam("/DCmotor_speed_min", DCmotor_speed_min))
+  if (n.getParam("iDCmotor/DCmotor_speed_min", DCmotor_speed_min))
   {
     ROS_INFO("iDCmotor got param /DCmotor_speed_min: %d\n", DCmotor_speed_min);
   }

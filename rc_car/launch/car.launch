@@ -1,0 +1,11 @@
+<launch>
+  
+  <node pkg="rc_car" type="iDCmotor" name="iDCmotor"  respawn="true">
+  <param name="DCmotor_period_speed_max" value="1950000"/>
+  <param name="DCmotor_period_speed_0" value="1340000"/>
+  <param name="DCmotor_period_speed_min" value="800000"/>
+  <param name="DCmotor_speed_max" value="1"/>
+  <param name="DCmotor_speed_min" value="0"/>
+  </node>
+   
+</launch>
