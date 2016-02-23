@@ -5,7 +5,9 @@ Il faut veiller à noter les paquets et les instructions nécessaires au fonctio
 
 Pour le GPS :
 - installation des paquets :								sudo apt-get install gpsd gpsd-clients python-gps libgps-dev
-- démarrage du node GPS :									rosrun gpsd_client gpsd_client _host:=localhost _port:=2947
+- démarrage du node GPS :
+	il faut lancer gpsd avant: gpsd /dev/tty[monUSB]
+	rosrun gpsd_client gpsd_client _host:=localhost _port:=2947
 - données publiées dans les topics /fix et /extended_fix
 - (optionnel) affichage direct des données issues du GPS :	sudo gpscat -s 4800 /dev/tty[monUSB]
 - (optionnel) passage du GPS en NMEA : 						gpsctl -n /dev/tty[monUSB]

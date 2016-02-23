@@ -44,7 +44,7 @@ while not rospy.is_shutdown():
     words = string.split(line,",")    # Fields split
  
     imuMsg.Y = float(words[0])
-x    imuMsg.P = float(words[1])
+    imuMsg.P = float(words[1])
     imuMsg.R = float(words[2])
 
     pub.publish(imuMsg)
