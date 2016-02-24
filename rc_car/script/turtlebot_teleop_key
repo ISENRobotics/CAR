@@ -51,10 +51,10 @@ CTRL-C to quit
 """
 
 moveBindings = {
-        'z':(1),
-        's':(-1),
-        'q':(1),
-        'd':(-1),
+        'z':(1,0),
+        's':(-1,0),
+        'q':(1,0),
+        'd':(-1,0),
          }
 
 speedBindings={
