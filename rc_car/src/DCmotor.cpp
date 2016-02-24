@@ -22,9 +22,9 @@ int DCmotor_speed_min = 0;
 
 
 
-char * lecture_fichier(std::string path)
+char * lecture_fichier()
 {
-  std::string filepath = "~/catkin_ws/src/script/" + path;
+  std::string filepath = "~/catkin_ws/src/script/pwmservo.txt";
   FILE* f=fopen(filepath.c_str(), "r");
     char* file;
     fgets(file,10,f);
@@ -107,8 +107,7 @@ int main(int argc, char **argv)
   ros::Subscriber tRSR_sub = n.subscribe("tRSR", 1000, RSR_process);
   ros::Subscriber tCommand_sub = n.subscribe("tCommand", 1000, refreshPWM_DCmotor);
   //ros::Publisher tError_pub = n.advertise<Error>("tError", 1000);
-  
-ROS_INFO(" %s\n",lecture_fichier("pwmservo.txt"));
+ROS_INFO_STREAM(lecture_fichier());
 
   if (n.getParam("iDCmotor/DCmotor_period_speed_max", DCmotor_period_speed_max))
   {
