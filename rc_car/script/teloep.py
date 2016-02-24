@@ -34,7 +34,7 @@ from rc_car.msg import Command
 import sys, select, termios, tty
 
 msg = """
-Control Your Turtlebot!
+Control Your CAR!
 ---------------------------
 Moving around:
         z     
@@ -50,11 +50,14 @@ anything else : stop smoothly
 CTRL-C to quit
 """
 
-moveBindings = {
-        'z':(1),
-        's':(-1),
-        'q':(1),
-        'd':(-1),
+avance = {
+        'z':1,
+        's':-1
+         }
+
+tourne = {
+        'q':-45,
+        'd':45
          }
 
 speedBindings={
@@ -77,20 +80,22 @@ def getKey():
     termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
     return key
 
-speed = .2
+speed = 1
 turn = 1
 
 def vels(speed,turn):
     return "currently:\tspeed %s\tturn %s " % (speed,turn)
 
+
+
 if __name__=="__main__":
     settings = termios.tcgetattr(sys.stdin)
     
     rospy.init_node('teleop')
-    pub = rospy.Publisher('tCommand', Command, queue_size=5)
+    pub = rospy.Publisher('tCommand', Command, queue_size=1)
 
     x = 0
-    th = 0
+    y = 0
     status = 0
     count = 0
     acc = 0.1
@@ -99,56 +104,67 @@ if __name__=="__main__":
     control_speed = 0
     control_turn = 0
     try:
-        #print msg
+        print msg
         print vels(speed,turn)
         while(1):
             key = getKey()
-            if key in moveBindings.keys():
-                x = moveBindings[key][0]
-                print msg
+            if key in avance.keys():
+                x = avance[key]
+                #print msg
+                #print x
                 count = 0
-            #elif key in speedBindings.keys():
-             #   speed = speed * speedBindings[key][0]
-              #  turn = turn * speedBindings[key][1]
-               # count = 0
-               # print vels(speed,turn)
-               # if (status == 14):
-               #     print msg
-               # status = (status + 1) % 15
+            elif key in tourne.keys():
+                y = tourne[key]
+                #print msg
+                #print x
+                count = 0
+            elif key in speedBindings.keys():
+                speed = speed * speedBindings[key][0]
+                turn = turn * speedBindings[key][1]
+                count = 0
+                print vels(speed,turn)
+                if (status == 14):
+                    print msg
+                status = (status + 1) % 15
             elif key == ' ' or key == 'k' :
                 x = 0
-                th = 0
+                y = 0
                 control_speed = 0
                 control_turn = 0
             else:
                 count = count + 1
-                if count > 4:
+                if count > 10:
                     x = 0
-                    th = 0
-              #  if (key == '\x03'):
-               #     break
-           # target_speed = speed * x
-           # target_turn = turn * th
-           # if target_speed > control_speed:
-           #     control_speed = min( target_speed, control_speed + 0.02 )
-           # elif target_speed < control_speed:
-           #     control_speed = max( target_speed, control_speed - 0.02 )
-           # else:
-           #     control_speed = target_speed
-          #  if target_turn > control_turn:
-         #       control_turn = min( target_turn, control_turn + 0.1 )
-        #    elif target_turn < control_turn:
-       #         control_turn = max( target_turn, control_turn - 0.1 )
-      #      else:
-     #           control_turn = target_turn
+                    y = 0
+                if (key == '\x03'):
+                    break
+            target_speed = speed * x
+            target_turn = turn * y
+
+            if target_speed > control_speed:
+                control_speed = min( target_speed, control_speed + 0.1 )
+            elif target_speed < control_speed:
+                control_speed = max( target_speed, control_speed - 0.1 )
+            else:
+                control_speed = target_speed
+            if target_turn > control_turn:
+                control_turn = min( target_turn, control_turn + 4.5 )
+            elif target_turn < control_turn:
+                control_turn = max( target_turn, control_turn - 4.5 )
+            else:
+                control_turn = target_turn
             #twist = Twist()
             #twist.linear.x = control_speed; twist.linear.y = 0; twist.linear.z = 0
             #twist.angular.x = 0; twist.angular.y = 0; twist.angular.z = control_turn
             #pub.publish(twist)
+            #print vels(x,y)
+            #print "-------" 
+            print vels(control_speed,control_turn)
+
 
             command = Command()
-            command.speed = x
-            command.dir = 0
+            command.speed = control_speed
+            command.dir = control_turn
             pub.publish(command)
 
             #print("loop: {0}".format(count))

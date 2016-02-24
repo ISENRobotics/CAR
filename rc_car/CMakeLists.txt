@@ -6,8 +6,10 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   message_generation
+  roslaunch
 )
 
+roslaunch_add_file_check(launch)
 
 set(Boost_USE_STATIC_LIBS ON) 
 set(Boost_USE_MULTITHREADED ON)  
@@ -27,7 +29,11 @@ find_package(Boost COMPONENTS bind)
 #add_service_files(
  #  FILES
   # AddTwoInts.srv
+<<<<<<< HEAD
 # )
+=======
+ #)
+>>>>>>> 7cfcf519910d06aa3c60d9e99f69f70eb01053fd
 
 ## Generate actions in the 'action' folder
 # add_action_files(

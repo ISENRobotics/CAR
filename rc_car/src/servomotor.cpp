@@ -87,7 +87,7 @@ int main(int argc, char **argv)
   ros::Subscriber tCommand_sub = n.subscribe("tCommand", 1000, refreshPWM_Servomotor);
   //ros::Publisher tError_pub = n.advertise<Error>("tError", 1000);
 
-  if (n.getParam("/servo_period_angle_max", servo_period_angle_max))
+  if (n.getParam("iServomotor/servo_period_angle_max", servo_period_angle_max))
   {
     ROS_INFO("iServomotor got param /servo_period_angle_max: %d\n", servo_period_angle_max);
   }
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
     ROS_ERROR("Failed to get param 'servo_period_angle_max'\n");
   }
 
-  if (n.getParam("/servo_period_angle_0", servo_period_angle_0))
+  if (n.getParam("iServomotor/servo_period_angle_0", servo_period_angle_0))
   {
     ROS_INFO("iServomotor got param /servo_period_angle_0: %d\n", servo_period_angle_0);
   }
@@ -105,7 +105,7 @@ int main(int argc, char **argv)
     ROS_ERROR("Failed to get param 'servo_period_angle_0'\n");
   }
 
-  if (n.getParam("/servo_period_angle_min", servo_period_angle_min))
+  if (n.getParam("iServomotor/servo_period_angle_min", servo_period_angle_min))
   {
     ROS_INFO("iServomotor got param /servo_period_angle_min: %d\n", servo_period_angle_min);
   }
@@ -114,7 +114,7 @@ int main(int argc, char **argv)
     ROS_ERROR("Failed to get param 'servo_period_angle_min'\n");
   }
 
-  if (n.getParam("/servo_angle_max", servo_angle_max))
+  if (n.getParam("iServomotor/servo_angle_max", servo_angle_max))
   {
     ROS_INFO("iServomotor got param /servo_angle_max: %d\n", servo_angle_max);
   }
@@ -123,7 +123,7 @@ int main(int argc, char **argv)
     ROS_ERROR("Failed to get param 'servo_angle_max'\n");
   }
 
-  if (n.getParam("/servo_angle_min", servo_angle_min))
+  if (n.getParam("iServomotor/servo_angle_min", servo_angle_min))
   {
     ROS_INFO("iServomotor got param /servo_angle_min: %d\n", servo_angle_min);
   }
