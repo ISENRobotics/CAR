@@ -98,6 +98,8 @@ if __name__=="__main__":
     y = 0
     status = 0
     count = 0
+    count1 = 0
+    count2 = 0
     acc = 0.1
     target_speed = 0
     target_turn = 0
@@ -112,12 +114,12 @@ if __name__=="__main__":
                 x = avance[key]
                 #print msg
                 #print x
-                count = 0
+                count1 = 0
             elif key in tourne.keys():
                 y = tourne[key]
                 #print msg
                 #print x
-                count = 0
+                count2 = 0
             elif key in speedBindings.keys():
                 speed = speed * speedBindings[key][0]
                 turn = turn * speedBindings[key][1]
@@ -133,8 +135,11 @@ if __name__=="__main__":
                 control_turn = 0
             else:
                 count = count + 1
-                if count > 10:
+                count1 = count1 + 1
+                count2 = count2 + 1
+                if count1 > 5:
                     x = 0
+                if count2 > 10:
                     y = 0
                 if (key == '\x03'):
                     break

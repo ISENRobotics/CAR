@@ -4,16 +4,16 @@
 #include "rc_car/Command.h"
 #include "rc_car/RSRMsg.h"
 #include "rc_car/pwm.h"
-#include <stdio.h>  /* defines FILENAME_MAX */
-#ifdef WINDOWS
-    #include <direct.h>
-    #define GetCurrentDir _getcwd
-#else
-    #include <unistd.h>
-    #define GetCurrentDir getcwd
- #endif
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
 
-PWM pwmDCmotor(PWM_DC_MOTOR_DIR);
+ 
+using namespace std;
+
 int DCmotor_period_speed_max = 0;
 int DCmotor_period_speed_0 = 0;
 int DCmotor_period_speed_min = 0;
@@ -22,16 +22,31 @@ int DCmotor_speed_min = 0;
 
 
 
-char * lecture_fichier()
+string lecture_fichier()
 {
-  std::string filepath = "~/catkin_ws/src/script/pwmservo.txt";
-  FILE* f=fopen(filepath.c_str(), "r");
-    char* file;
-    fgets(file,10,f);
-    fclose(f);
-    return file;
-  
+      struct passwd *pw = getpwuid(getuid());
+
+      std::string homedir = pw->pw_dir;
+      std::string path = homedir + "/catkin_ws/src/script/pwmservo.txt";
+      
+      ifstream fichier(path.c_str(), ios::in);  // on ouvre en lecture
+        string contenu="";
+        if(fichier)  // si l'ouverture a fonctionné
+        {
+                  // déclaration d'une chaîne qui contiendra la ligne lue
+                getline(fichier, contenu);  // on met dans "contenu" la ligne
+                
+                fichier.close();
+        }
+        else
+                cerr << "Impossible d'ouvrir le fichier !" << endl;
+ 
+        return contenu;
 }
+
+PWM pwmDCmotor(lecture_fichier() + "/pwm1");
+
+
 
 void refreshPWM_DCmotor(const rc_car::CommandConstPtr& cmd)
 {
@@ -107,7 +122,7 @@ int main(int argc, char **argv)
   ros::Subscriber tRSR_sub = n.subscribe("tRSR", 1000, RSR_process);
   ros::Subscriber tCommand_sub = n.subscribe("tCommand", 1000, refreshPWM_DCmotor);
   //ros::Publisher tError_pub = n.advertise<Error>("tError", 1000);
-ROS_INFO_STREAM(lecture_fichier());
+
 
   if (n.getParam("iDCmotor/DCmotor_period_speed_max", DCmotor_period_speed_max))
   {

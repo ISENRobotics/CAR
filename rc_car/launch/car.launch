@@ -16,6 +16,9 @@
   <param name="servo_angle_min" value="-45"/>
   </node>
 
+  <node pkg="rc_car" type="iSwitchMode" name="iSwitchMode" output="screen" respawn="true">
+  </node>
+
   <node name="teleop" pkg="rc_car" type="teleop"/>
    
 </launch>

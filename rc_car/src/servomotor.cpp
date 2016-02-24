@@ -4,13 +4,45 @@
 #include "rc_car/Command.h"
 #include "rc_car/RSRMsg.h"
 #include "rc_car/pwm.h"
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
 
-PWM pwmServomotor(PWM_SERVOMOTOR_DIR);
+ 
+using namespace std;
+
 int servo_period_angle_max = 0;
 int servo_period_angle_0 = 0;
 int servo_period_angle_min = 0;
 int servo_angle_max = 0;
 int servo_angle_min = 0;
+
+string lecture_fichier()
+{
+      struct passwd *pw = getpwuid(getuid());
+
+      std::string homedir = pw->pw_dir;
+      std::string path = homedir + "/catkin_ws/src/script/pwmservo.txt";
+      
+      ifstream fichier(path.c_str(), ios::in);  // on ouvre en lecture
+        string contenu="";
+        if(fichier)  // si l'ouverture a fonctionné
+        {
+                  // déclaration d'une chaîne qui contiendra la ligne lue
+                getline(fichier, contenu);  // on met dans "contenu" la ligne
+                
+                fichier.close();
+        }
+        else
+                cerr << "Impossible d'ouvrir le fichier !" << endl;
+ 
+        return contenu;
+}
+
+PWM pwmServomotor(lecture_fichier() + "/pwm0");
 
 void refreshPWM_Servomotor(const rc_car::CommandConstPtr& cmd)
 {
