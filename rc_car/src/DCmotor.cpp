@@ -4,6 +4,14 @@
 #include "rc_car/Command.h"
 #include "rc_car/RSRMsg.h"
 #include "rc_car/pwm.h"
+#include <stdio.h>  /* defines FILENAME_MAX */
+#ifdef WINDOWS
+    #include <direct.h>
+    #define GetCurrentDir _getcwd
+#else
+    #include <unistd.h>
+    #define GetCurrentDir getcwd
+ #endif
 
 PWM pwmDCmotor(PWM_DC_MOTOR_DIR);
 int DCmotor_period_speed_max = 0;
@@ -11,6 +19,19 @@ int DCmotor_period_speed_0 = 0;
 int DCmotor_period_speed_min = 0;
 int DCmotor_speed_max = 0;
 int DCmotor_speed_min = 0;
+
+
+
+char * lecture_fichier(std::string path)
+{
+  std::string filepath = "~/catkin_ws/src/script/" + path;
+  FILE* f=fopen(filepath.c_str(), "r");
+    char* file;
+    fgets(file,10,f);
+    fclose(f);
+    return file;
+  
+}
 
 void refreshPWM_DCmotor(const rc_car::CommandConstPtr& cmd)
 {
@@ -86,6 +107,8 @@ int main(int argc, char **argv)
   ros::Subscriber tRSR_sub = n.subscribe("tRSR", 1000, RSR_process);
   ros::Subscriber tCommand_sub = n.subscribe("tCommand", 1000, refreshPWM_DCmotor);
   //ros::Publisher tError_pub = n.advertise<Error>("tError", 1000);
+  
+ROS_INFO(" %s\n",lecture_fichier("pwmservo.txt"));
 
   if (n.getParam("iDCmotor/DCmotor_period_speed_max", DCmotor_period_speed_max))
   {
