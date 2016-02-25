@@ -29,11 +29,7 @@ find_package(Boost COMPONENTS bind)
 #add_service_files(
  #  FILES
   # AddTwoInts.srv
-<<<<<<< HEAD
-# )
-=======
  #)
->>>>>>> 7cfcf519910d06aa3c60d9e99f69f70eb01053fd
 
 ## Generate actions in the 'action' folder
 # add_action_files(

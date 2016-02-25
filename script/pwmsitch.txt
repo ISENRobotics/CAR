@@ -1,1 +1,1 @@
-pwmsitch
+pwmchip0
