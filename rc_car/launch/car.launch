@@ -2,16 +2,16 @@
   
   <node pkg="rc_car" type="iDCmotor" name="iDCmotor" output="screen" respawn="true">
   <param name="DCmotor_period_speed_max" value="1950000"/>
-  <param name="DCmotor_period_speed_0" value="1340000"/>
+  <param name="DCmotor_period_speed_0" value="1480000"/>
   <param name="DCmotor_period_speed_min" value="800000"/>
   <param name="DCmotor_speed_max" value="1"/>
   <param name="DCmotor_speed_min" value="-1"/>
   </node>
 
   <node pkg="rc_car" type="iServomotor" name="iServomotor" output="screen" respawn="true">
-  <param name="servo_period_angle_max" value="1950000"/>
-  <param name="servo_period_angle_0" value="1340000"/>
-  <param name="servo_period_angle_min" value="800000"/>
+  <param name="servo_period_angle_max" value="1880000"/>
+  <param name="servo_period_angle_0" value="1460000"/>
+  <param name="servo_period_angle_min" value="1040000"/>
   <param name="servo_angle_max" value="45"/>
   <param name="servo_angle_min" value="-45"/>
   </node>

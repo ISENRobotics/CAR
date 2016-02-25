@@ -56,8 +56,8 @@ avance = {
          }
 
 tourne = {
-        'q':-45,
-        'd':45
+        'q':45,
+        'd':-45
          }
 
 speedBindings={
