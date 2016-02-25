@@ -1,0 +1,34 @@
+#! /bin/bash
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+
+DAEMON=/usr/bin/test   #mettre ici votre programme ( exempel camorama)
+
+/home/ubuntu/catkin_ws/src/script/bb.org-overlays/init/init-pwm.sh
+sleep 10
+python /home/ubuntu/catkin_ws/src/script/init.py
+sleep 1
+echo Ok > /home/ubuntu/ttt
+
+test -x $DAEMON || exit 0
+
+case "$1" in
+    start)
+#ici on écrit le machin pour démarrer le programme genre 
+/usr/bin/camorama
+    ;;
+  stop)
+	killall camorama #ou rien 
+    ;;
+  force-reload|restart)
+    $0 stop
+    $0 start
+    ;;
+  *)
+    echo "Usage: /etc/init.d/atd {start|stop|restart|force-reload|status}"
+    exit 1
+    ;;
+esac
+
+exit 0
+
