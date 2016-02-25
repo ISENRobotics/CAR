@@ -1,0 +1,66 @@
+# 1 "src/arm/dev-USB-PWR-CTL-00A1.dts"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "src/arm/dev-USB-PWR-CTL-00A1.dts"
+# 11 "src/arm/dev-USB-PWR-CTL-00A1.dts"
+/dts-v1/;
+/plugin/;
+
+# 1 "include/dt-bindings/board/am335x-bbw-bbb-base.h" 1
+# 15 "src/arm/dev-USB-PWR-CTL-00A1.dts" 2
+# 1 "include/dt-bindings/gpio/gpio.h" 1
+# 16 "src/arm/dev-USB-PWR-CTL-00A1.dts" 2
+# 1 "include/dt-bindings/pinctrl/am33xx.h" 1
+
+
+
+
+
+
+
+# 1 "include/dt-bindings/pinctrl/omap.h" 1
+# 9 "include/dt-bindings/pinctrl/am33xx.h" 2
+# 17 "src/arm/dev-USB-PWR-CTL-00A1.dts" 2
+
+/ {
+ compatible = "ti,beaglebone", "ti,beaglebone-black", "ti,beaglebone-green";
+
+
+ part-number = "dev-USB-PWR-CTL";
+ version = "00A1";
+
+
+ exclusive-use =
+ "gpio3_13";
+
+ fragment@0 {
+  target = <&am33xx_pinmux>;
+  __overlay__ {
+
+   bb_usb1_pwr_pins: pinmux_bb_usb1_pwr {
+    pinctrl-single,pins = <
+     0x234 0x0f
+    >;
+   };
+  };
+ };
+
+ fragment@1 {
+  target-path="/";
+  __overlay__ {
+
+   leds {
+    pinctrl-names = "default";
+    pinctrl-0 = <&bb_usb1_pwr_pins>;
+
+    compatible = "gpio-leds";
+
+    usb_hub_power@1 {
+     label = "usb_hub_power";
+     gpios = <&gpio3 13 0>;
+     default-state = "on";
+    };
+   };
+  };
+ };
+};

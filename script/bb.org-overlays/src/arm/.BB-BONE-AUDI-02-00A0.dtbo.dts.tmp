@@ -1,0 +1,134 @@
+# 1 "src/arm/BB-BONE-AUDI-02-00A0.dts"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "src/arm/BB-BONE-AUDI-02-00A0.dts"
+
+
+
+
+
+
+
+/dts-v1/;
+/plugin/;
+
+/ {
+ compatible = "ti,beaglebone", "ti,beaglebone-black", "ti,beaglebone-green";
+
+
+ part-number = "BB-BONE-AUDI-02";
+ version = "00A0", "A0";
+
+
+ exclusive-use =
+
+  "P9.31",
+  "P9.29",
+  "P9.28",
+  "P9.25",
+
+  "gpio1_18", "gpio1_19",
+  "mcasp0";
+
+ fragment@0 {
+  target = <&am33xx_pinmux>;
+  __overlay__ {
+
+   i2c2_pins: pinmux_i2c2_pins {
+    pinctrl-single,pins = <
+     0x150 0x72
+     0x154 0x72
+    >;
+   };
+
+   bone_audio_cape_audio_pins: pinmux_bone_audio_cape_audio_pins {
+    pinctrl-single,pins = <
+     0x1ac 0x00
+     0x19c 0x22
+     0x194 0x20
+     0x190 0x20
+     0x198 0x20
+    >;
+   };
+  };
+ };
+
+ fragment@1 {
+  target = <&i2c2>;
+  __overlay__ {
+   #address-cells = <1>;
+   #size-cells = <0>;
+   clock-frequency = <100000>;
+   status = "okay";
+   pinctrl-names = "default";
+   pinctrl-0 = <&i2c2_pins>;
+
+
+   tlv320aic3104: tlv320aic3104@18 {
+    #sound-dai-cells = <0>;
+    compatible = "ti,tlv320aic3104";
+    reg = <0x18>;
+
+    AVDD-supply = <&ldo4_reg>;
+    IOVDD-supply = <&ldo4_reg>;
+    DRVDD-supply = <&ldo4_reg>;
+    DVDD-supply = <&ldo4_reg>;
+   };
+  };
+ };
+
+ fragment@2 {
+  target = <&mcasp0>;
+  __overlay__ {
+   #sound-dai-cells = <0>;
+   pinctrl-names = "default";
+   pinctrl-0 = <&bone_audio_cape_audio_pins>;
+
+   status = "okay";
+
+   op-mode = <0>;
+   tdm-slots = <2>;
+   num-serializer = <16>;
+   serial-dir = <
+    2 0 1 0
+    0 0 0 0
+    0 0 0 0
+    0 0 0 0
+   >;
+   tx-num-evt = <1>;
+   rx-num-evt = <1>;
+  };
+ };
+
+ fragment@3 {
+  target-path="/";
+  __overlay__ {
+   sound {
+    compatible = "simple-audio-card";
+    simple-audio-card,name = "AudioCape Rev B";
+    simple-audio-card,widgets =
+     "Headphone", "Headphone Jack",
+     "Line", "Line In";
+    simple-audio-card,routing =
+     "Headphone Jack", "HPLOUT",
+     "Headphone Jack", "HPROUT",
+     "LINE1L", "Line In",
+     "LINE1R", "Line In";
+    simple-audio-card,format = "dsp_b";
+    simple-audio-card,bitclock-master = <&sound_master>;
+    simple-audio-card,frame-master = <&sound_master>;
+    simple-audio-card,bitclock-inversion;
+
+    simple-audio-card,cpu {
+     sound-dai = <&mcasp0>;
+    };
+
+    sound_master: simple-audio-card,codec {
+     sound-dai = <&tlv320aic3104>;
+     system-clock-frequency = <12000000>;
+    };
+   };
+  };
+
+ };
+};

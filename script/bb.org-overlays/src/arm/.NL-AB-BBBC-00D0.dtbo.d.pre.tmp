@@ -1,0 +1,3 @@
+NL-AB-BBBC-00D0.o: src/arm/NL-AB-BBBC-00D0.dts \
+ include/dt-bindings/board/am335x-bbw-bbb-base.h \
+ include/dt-bindings/pinctrl/am33xx.h include/dt-bindings/pinctrl/omap.h

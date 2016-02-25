@@ -1,0 +1,4 @@
+BB-BONE-LCD7-01-00A3.o: src/arm/BB-BONE-LCD7-01-00A3.dts \
+ include/dt-bindings/board/am335x-bbw-bbb-base.h \
+ include/dt-bindings/gpio/gpio.h include/dt-bindings/pinctrl/am33xx.h \
+ include/dt-bindings/pinctrl/omap.h

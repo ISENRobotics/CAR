@@ -1,0 +1,65 @@
+# 1 "src/arm/BB-I2C1-00A0.dts"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "src/arm/BB-I2C1-00A0.dts"
+# 10 "src/arm/BB-I2C1-00A0.dts"
+/dts-v1/;
+/plugin/;
+
+# 1 "include/dt-bindings/board/am335x-bbw-bbb-base.h" 1
+# 14 "src/arm/BB-I2C1-00A0.dts" 2
+# 1 "include/dt-bindings/pinctrl/am33xx.h" 1
+
+
+
+
+
+
+
+# 1 "include/dt-bindings/pinctrl/omap.h" 1
+# 9 "include/dt-bindings/pinctrl/am33xx.h" 2
+# 15 "src/arm/BB-I2C1-00A0.dts" 2
+
+/ {
+ compatible = "ti,beaglebone", "ti,beaglebone-black", "ti,beaglebone-green";
+
+
+ part-number = "BB-I2C1";
+ version = "00A0";
+
+
+ exclusive-use =
+  "P9.18",
+  "P9.17",
+
+  "i2c1";
+
+
+ fragment@0 {
+  target = <&am33xx_pinmux>;
+  __overlay__ {
+   bb_i2c1_pins: pinmux_bb_i2c1_pins {
+    pinctrl-single,pins = <
+     0x158 0x72
+     0x15C 0x72
+    >;
+   };
+  };
+ };
+
+ fragment@1 {
+  target = <&i2c1>;
+  __overlay__ {
+   status = "okay";
+   pinctrl-names = "default";
+   pinctrl-0 = <&bb_i2c1_pins>;
+
+
+   clock-frequency = <100000>;
+
+   #address-cells = <1>;
+   #size-cells = <0>;
+# 68 "src/arm/BB-I2C1-00A0.dts"
+  };
+ };
+};

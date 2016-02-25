@@ -1,0 +1,103 @@
+# 1 "src/arm/BB-RELAY-4PORT-00A0.dts"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "src/arm/BB-RELAY-4PORT-00A0.dts"
+
+
+
+
+
+
+
+/dts-v1/;
+/plugin/;
+
+# 1 "include/dt-bindings/board/am335x-bbw-bbb-base.h" 1
+# 12 "src/arm/BB-RELAY-4PORT-00A0.dts" 2
+# 1 "include/dt-bindings/gpio/gpio.h" 1
+# 13 "src/arm/BB-RELAY-4PORT-00A0.dts" 2
+# 1 "include/dt-bindings/pinctrl/am33xx.h" 1
+
+
+
+
+
+
+
+# 1 "include/dt-bindings/pinctrl/omap.h" 1
+# 9 "include/dt-bindings/pinctrl/am33xx.h" 2
+# 14 "src/arm/BB-RELAY-4PORT-00A0.dts" 2
+
+/ {
+ compatible = "ti,beaglebone", "ti,beaglebone-black", "ti,beaglebone-green";
+
+
+ part-number = "BB-RELAY-4PORT";
+ version = "00A0";
+
+
+ exclusive-use =
+
+  "P9.15",
+  "P9.23",
+  "P9.12",
+  "P9.27",
+
+  "gpio1_16",
+  "gpio1_17",
+  "gpio1_28",
+  "gpio3_19";
+
+ fragment@0 {
+  target = <&am33xx_pinmux>;
+  __overlay__ {
+
+   bb_gpio_relay_pins: pinmux_bb_gpio_relay_pins {
+    pinctrl-single,pins = <
+     0x040 (0 | 7)
+     0x044 (0 | 7)
+     0x078 (0 | 7)
+     0x1A4 (0 | 7)
+    >;
+   };
+
+  };
+ };
+
+ fragment@1 {
+  target-path="/";
+  __overlay__ {
+
+   leds {
+    pinctrl-names = "default";
+    pinctrl-0 = <&bb_gpio_relay_pins>;
+
+    compatible = "gpio-leds";
+
+    jp@1 {
+     label = "relay-jp1";
+     gpios = <&gpio1 28 0>;
+     default-state = "keep";
+    };
+
+    jp@2 {
+     label = "relay-jp2";
+     gpios = <&gpio1 16 0>;
+     default-state = "keep";
+    };
+
+    jp@3 {
+     label = "relay-jp3";
+     gpios = <&gpio1 17 0>;
+     default-state = "keep";
+    };
+
+    jp@4 {
+     label = "relay-jp4";
+     gpios = <&gpio3 19 0>;
+     default-state = "keep";
+    };
+   };
+  };
+ };
+};

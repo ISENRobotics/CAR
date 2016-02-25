@@ -1,0 +1,48 @@
+# 1 "src/arm/BB-BONE-WTHR-01-00B0.dts"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "src/arm/BB-BONE-WTHR-01-00B0.dts"
+
+
+
+
+
+
+
+/dts-v1/;
+/plugin/;
+
+/ {
+ compatible = "ti,beaglebone", "ti,beaglebone-black", "ti,beaglebone-green";
+
+ part-number = "BB-BONE-WTHR-01";
+ version = "00B0";
+
+
+ fragment@0 {
+  target = <&i2c2>;
+  __overlay__ {
+
+   #address-cells = <1>;
+   #size-cells = <0>;
+
+
+   tsl2550@39 {
+    compatible = "tsl,tsl2550";
+    reg = <0x39>;
+   };
+
+
+   htu21@40 {
+    compatible = "meas-spec,htu21";
+    reg = <0x40>;
+   };
+
+
+   bmp085@77 {
+    compatible = "bosch,bmp085";
+    reg = <0x77>;
+   };
+  };
+ };
+};

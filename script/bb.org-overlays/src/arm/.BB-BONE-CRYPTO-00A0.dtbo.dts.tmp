@@ -1,0 +1,91 @@
+# 1 "src/arm/BB-BONE-CRYPTO-00A0.dts"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "src/arm/BB-BONE-CRYPTO-00A0.dts"
+# 10 "src/arm/BB-BONE-CRYPTO-00A0.dts"
+/dts-v1/;
+/plugin/;
+
+# 1 "include/dt-bindings/board/am335x-bbw-bbb-base.h" 1
+# 14 "src/arm/BB-BONE-CRYPTO-00A0.dts" 2
+# 1 "include/dt-bindings/pinctrl/am33xx.h" 1
+
+
+
+
+
+
+
+# 1 "include/dt-bindings/pinctrl/omap.h" 1
+# 9 "include/dt-bindings/pinctrl/am33xx.h" 2
+# 15 "src/arm/BB-BONE-CRYPTO-00A0.dts" 2
+
+/ {
+ compatible = "ti,beaglebone", "ti,beaglebone-black", "ti,beaglebone-green";
+
+
+ part-number = "BB-BONE-CRYPTO";
+ version = "00A0";
+
+
+ exclusive-use =
+
+
+  "P9.13",
+  "P9.11",
+  "P9.23",
+
+  "P8.11",
+
+  "uart4",
+  "gpio1_13",
+  "gpio1_17";
+
+ fragment@0 {
+  target = <&am33xx_pinmux>;
+  __overlay__ {
+   cryptocape_pins: pinmux_cryptocape_pins {
+    pinctrl-single,pins = <
+     0x044 0x17
+     0x034 0x2F
+    >;
+   };
+
+   bb_uart4_pins: pinmux_bb_uart4_pins {
+    pinctrl-single,pins = <
+     0x070 (((1 << 5) | (1 << 4)) | 6)
+     0x074 (0 | 6)
+    >;
+   };
+  };
+ };
+
+ fragment@1 {
+  target = <&uart4>;
+  __overlay__ {
+   status = "okay";
+   pinctrl-names = "default";
+   pinctrl-0 = <&bb_uart4_pins>;
+  };
+ };
+
+ fragment@2 {
+  target = <&i2c2>;
+  __overlay__ {
+   #address-cells = <1>;
+   #size-cells = <0>;
+
+
+   ds1307@68 {
+    compatible = "ds1307";
+    reg = <0x68>;
+   };
+
+
+   tpm_i2c_atmel@29 {
+    compatible = "tpm_i2c_atmel";
+    reg = <0x29>;
+   };
+  };
+ };
+};

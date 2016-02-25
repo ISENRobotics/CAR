@@ -1,0 +1,3 @@
+BB-BONE-SERL-03-00A1.o: src/arm/BB-BONE-SERL-03-00A1.dts \
+ include/dt-bindings/board/am335x-bbw-bbb-base.h \
+ include/dt-bindings/pinctrl/am33xx.h include/dt-bindings/pinctrl/omap.h

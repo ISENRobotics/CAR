@@ -1,0 +1,295 @@
+# 1 "src/arm/BB-BONE-REPLICAP-00B1.dts"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "src/arm/BB-BONE-REPLICAP-00B1.dts"
+# 11 "src/arm/BB-BONE-REPLICAP-00B1.dts"
+/dts-v1/;
+/plugin/;
+
+/ {
+ compatible = "ti,beaglebone", "ti,beaglebone-black", "ti,beaglebone-green";
+
+
+    part-number = "BB-BONE-REPLICAP";
+    version = "00B1";
+
+
+    exclusive-use =
+
+        "P8.8",
+        "P8.9",
+        "P8.10",
+        "P8.11",
+        "P8.12",
+        "P8.13",
+        "P8.14",
+        "P8.15",
+        "P8.16",
+        "P8.17",
+        "P8.18",
+        "P8.19",
+        "P8.26",
+
+        "P9.11",
+        "P9.12",
+        "P9.13",
+        "P9.16",
+        "P9.18",
+        "P9.22",
+        "P9.23",
+        "P9.24",
+        "P9.25",
+        "P9.28",
+        "P9.30",
+        "P9.31",
+        "P9.33",
+        "P9.35",
+        "P9.36",
+ "P9.41",
+        "P9.42";
+
+    fragment@0 {
+        target = <&am33xx_pinmux>;
+        __overlay__ {
+
+
+
+            bone_replicape_spi1_pins: pinmux_replicape_spi1_pins {
+                pinctrl-single,pins = <
+                    0x190 0x13
+                    0x194 0x33
+                    0x198 0x13
+                    0x164 0x12
+                >;
+            };
+            pruicss_stepper_pins: pinmux_pruicss_stepper_pins{
+                pinctrl-single,pins = <
+                    0x038 0x07
+                    0x03C 0x07
+                    0x028 0x07
+                    0x02C 0x07
+                    0x034 0x07
+                    0x030 0x07
+                    0x024 0x07
+                    0x020 0x07
+                    0x07C 0x07
+                    0x078 0x07
+                >;
+            };
+
+            stepper_fault_pins: pinmux_stepper_fault_pins{
+                pinctrl-single,pins = <
+                    0x094 0x37
+                    0x09C 0x37
+                    0x098 0x37
+                    0x08C 0x37
+                    0x184 0x37
+                >;
+            };
+
+            end_stop_pins: pinmux_end_stop_pins{
+                pinctrl-single,pins = <
+                    0x1AC 0x37
+                    0x070 0x37
+                    0x044 0x37
+                    0x074 0x37
+                    0x158 0x37
+      0x19C 0x37
+                >;
+            };
+            dallas_w1_pins: pinmux_dallas_w1_pins {
+                pinctrl-single,pins = <
+              0x150 0x37
+                >;
+            };
+
+
+
+
+
+
+
+            servo_pins: pinmux_servo_pins {
+                pinctrl-single,pins = <
+   0x048 0x36
+                        0x0C4 0x36
+                >;
+            };
+        };
+    };
+
+    fragment@1 {
+        target = <&spi1>;
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+            status = "okay";
+            pinctrl-names = "default";
+            pinctrl-0 = <&bone_replicape_spi1_pins>;
+            cs-gpios = <&gpio0 7 0>;
+
+            stepper_control{
+                #address-cells = <1>;
+                #size-cells = <0>;
+                compatible = "spidev";
+                reg = <1>;
+                spi-max-frequency = <16000000>;
+            };
+        };
+    };
+
+    fragment@2{
+        target = <&pruss>;
+        __overlay__{
+            status = "okay";
+            pinctrl-names = "default";
+            pinctrl-0 = <&pruicss_stepper_pins>;
+
+            stepper_x{
+                pin-names = "Replic:pru-step_x", "Replic:pru-dir_x";
+                gpios = <&gpio0 27 0
+                       &gpio1 29 0>;
+            };
+            stepper_y{
+                pin-names = "Replic:pru-step_y", "Replic:pru-dir_y";
+                gpios =<&gpio1 12 0
+                      &gpio0 22 0>;
+            };
+            stepper_z{
+                pin-names = "Replic:pru-step_z", "Replic:pru-dir_z";
+                gpios = <&gpio0 23 0
+                       &gpio0 26 0>;
+            };
+            stepper_ext_1{
+                pin-names = "Replic:pru-step_ext_1", "Replic:pru-dir_ext_1";
+                gpios = <&gpio1 28 0
+                       &gpio1 15 0>;
+            };
+            stepper_ext_2{
+                pin-names = "Replic:pru-step_ext_2", "Replic:pru-dir_ext_2";
+                gpios = <&gpio1 13 0
+                       &gpio1 14 0>;
+            };
+        };
+    };
+
+    fragment@3 {
+        target = <&ocp>;
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <1>;
+
+            gpio_keys {
+                compatible = "gpio-keys";
+                pinctrl-names = "default";
+                pinctrl-0 = <&end_stop_pins>;
+                pinctrl-1 = <&stepper_fault_pins>;
+                #address-cells = <1>;
+                #size-cells = <0>;
+
+                switch_x1 {
+                    label = "Replic:End-stop-X1";
+                    debounce_interval = <50>;
+                    linux,code = <112>;
+                    gpios = <&gpio3 21 0x5>;
+                    gpio-key,wakeup;
+                };
+                switch_x2 {
+                    label = "Replic:End-stop-X2";
+                    debounce_interval = <50>;
+                    linux,code = <113>;
+                    gpios = <&gpio0 30 0x5>;
+                    gpio-key,wakeup;
+                };
+                switch_y1 {
+                    label = "Replic:End-stop-Y1";
+                    debounce_interval = <50>;
+                    linux,code = <114>;
+                    gpios = <&gpio1 17 0x5>;
+                    gpio-key,wakeup;
+                };
+                switch_y2 {
+                    label = "Replic:End-stop-Y2";
+                    debounce_interval = <50>;
+                    linux,code = <115>;
+                    gpios = <&gpio3 17 0x5>;
+                    gpio-key,wakeup;
+                };
+                switch_z1 {
+                    label = "Replic:End-stop-Z1";
+                    debounce_interval = <50>;
+                    linux,code = <116>;
+                    gpios = <&gpio0 31 0x5>;
+                    gpio-key,wakeup;
+                };
+                switch_z2 {
+                    label = "Replic:End-stop-Z2";
+                    debounce_interval = <50>;
+                    linux,code = <117>;
+                    gpios = <&gpio0 4 0x5>;
+                    gpio-key,wakeup;
+                };
+                fault_x {
+                    label = "Replic:Fault-X";
+                    debounce_interval = <50>;
+                    linux,code = <90>;
+                    gpios = <&gpio2 4 0x5>;
+                    gpio-key,wakeup;
+                };
+                fault_y {
+                    label = "Replic:Fault-Y";
+                    debounce_interval = <50>;
+                    linux,code = <91>;
+                    gpios = <&gpio2 5 0x5>;
+                    gpio-key,wakeup;
+                };
+                fault_z {
+                    label = "Replic:Fault-Z";
+                    debounce_interval = <50>;
+                    linux,code = <92>;
+                    gpios = <&gpio0 15 0x5>;
+                    gpio-key,wakeup;
+                };
+                fault_e {
+                    label = "Replic:Fault-E";
+                    debounce_interval = <50>;
+                    linux,code = <93>;
+                    gpios = <&gpio2 1 0x5>;
+                    gpio-key,wakeup;
+                };
+                fault_h {
+                    label = "Replic:Fault-H";
+                    debounce_interval = <50>;
+                    linux,code = <94>;
+                    gpios = <&gpio2 3 0x5>;
+                    gpio-key,wakeup;
+                };
+            };
+            onewire {
+               compatible = "w1-gpio";
+               pinctrl-names = "default";
+               pinctrl-0 = <&dallas_w1_pins>;
+               status = "okay";
+               gpios = <&gpio0 2 0>;
+            };
+
+     pwm_enable {
+  compatible = "bone-pinmux-helper";
+                status = "okay";
+  pinctrl-names = "default";
+
+
+     };
+        };
+    };
+
+    fragment@4 {
+        target = <&tscadc>;
+        __overlay__ {
+            status = "okay";
+            adc {
+                ti,adc-channels = <4 5 6 7>;
+            };
+        };
+    };
+};
