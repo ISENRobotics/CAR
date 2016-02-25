@@ -5,8 +5,39 @@
 #include "rc_car/RSRMsg.h"
 #include "rc_car/SwitchMsg.h"
 #include "rc_car/pwm.h"
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
 
-PWM pwmSwitch(PWM_SWITCH_DIR);
+using namespace std;
+
+string lecture_fichier()
+{
+      struct passwd *pw = getpwuid(getuid());
+
+      std::string homedir = pw->pw_dir;
+      std::string path = homedir + "/catkin_ws/src/script/pwmswitch.txt";
+      
+      ifstream fichier(path.c_str(), ios::in);  // on ouvre en lecture
+        string contenu="";
+        if(fichier)  // si l'ouverture a fonctionné
+        {
+                  // déclaration d'une chaîne qui contiendra la ligne lue
+                getline(fichier, contenu);  // on met dans "contenu" la ligne
+                
+                fichier.close();
+        }
+        else
+                cerr << "Impossible d'ouvrir le fichier !" << endl;
+ 
+        return contenu;
+}
+
+
+PWM pwmSwitch(lecture_fichier() + "/pwm0");
 
 void switch_PWM_source(const rc_car::SwitchMsgConstPtr& switchMsg, ros::Publisher * tRSR_pub)
 {

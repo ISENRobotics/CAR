@@ -40,6 +40,7 @@ PWM::PWM(std::string directory_path, int duty, int period, bool polarity, bool e
 bool PWM::setPeriod(int period)
 {
 	std::string filepath = "/sys/class/pwm/" + this->directory + "/period";
+
 	FILE* f=fopen(filepath.c_str(), "w");
 
 	if(period<=0)
@@ -60,6 +61,7 @@ bool PWM::setPeriod(int period)
 bool PWM::setDuty(int duty)
 {
 	std::string filepath = "/sys/class/pwm/" + this->directory + "/duty_cycle";
+	
 	FILE* f=fopen(filepath.c_str(), "w");
 
 	if(duty<0)
