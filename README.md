@@ -35,7 +35,7 @@
    1. modifier le fichier /etc/natwork/interfaces
       1. verifier quelle est l'interface wifi
          * ifcongif -a
-      2. ajouter les lignes suivante au fichier interfaces modifier wlan0 si vous n'avez pas le même nom d'interface (ex : wlan1 )
+      2. ajouter les lignes suivantes au fichier interfaces modifier wlan0 si vous n'avez pas le même nom d'interface (ex : wlan1 )
          * auto wlan0
          * iface wlan0 inet dhcp
          *      wpa-ssid "votre ssid"
