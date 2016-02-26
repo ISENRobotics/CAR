@@ -1,6 +1,6 @@
 # CAR
 
-## créer a catkin workspace:
+## créer un catkin workspace:
 1. prerequit 
  * avoir installer ros indigo
 2. Créer le dossieret l'initialiser
@@ -12,8 +12,11 @@
  * catkin_make
 4. ajout setup.*sh en fonction de votre terminal
  * si vous utiliser bash
- * ajouter les lignes suivantes dans votre fichier .bashrc
- ** #ros
- ** source /opt/ros/indigo/setup.bash
- ** #catkin workspace
- ** source ~/catkin_ws/devel/setup.bash
+ * ajouter les lignes suivantes dans votre fichier .bashrc : 
+ * #ros
+ * source /opt/ros/indigo/setup.bash
+ * #catkin workspace
+ * source ~/catkin_ws/devel/setup.bash
+ 
+## recuperer le git 
+ 1. 
