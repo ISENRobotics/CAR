@@ -11,7 +11,6 @@
 #include <sys/types.h>
 #include <pwd.h>
 
- 
 using namespace std;
 
 int DCmotor_period_speed_max = 0;
@@ -19,7 +18,6 @@ int DCmotor_period_speed_0 = 0;
 int DCmotor_period_speed_min = 0;
 int DCmotor_speed_max = 0;
 int DCmotor_speed_min = 0;
-
 
 
 string lecture_fichier()
