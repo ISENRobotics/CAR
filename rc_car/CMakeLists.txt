@@ -59,6 +59,7 @@ include_directories(
 )
 
 add_library(pwm src/pwm.cpp)
+add_library(distance src/distance.cpp)
 
 add_executable(iDCmotor src/DCmotor.cpp)
 target_link_libraries(iDCmotor ${catkin_LIBRARIES})
@@ -76,3 +77,7 @@ target_link_libraries(iSwitchMode ${Boost_LIBRARIES})
 target_link_libraries(iSwitchMode pwm)
 add_dependencies(iSwitchMode rc_car_generate_messages_cpp)
 
+add_executable(iRegulation src/Regulation.cpp)
+target_link_libraries(iRegulation ${catkin_LIBRARIES})
+target_link_libraries(iRegulation distance)
+add_dependencies(iRegulation rc_car_generate_messages_cpp)
