@@ -4,10 +4,11 @@ PATH=/bin:/usr/bin:/sbin:/usr/sbin
 
 DAEMON=/usr/bin/test   #mettre ici votre programme ( exempel camorama)
 
-/home/ubuntu/catkin_ws/src/script/bb.org-overlays/init/init-pwm.sh
-sleep 10
 python /home/ubuntu/catkin_ws/src/script/init.py
 sleep 1
+/home/ubuntu/catkin_ws/src/script/init-pwm.sh
+sleep 5
+
 echo Ok > /home/ubuntu/ttt
 
 test -x $DAEMON || exit 0
