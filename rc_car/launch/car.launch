@@ -9,7 +9,7 @@
   </node>
 
   <node pkg="rc_car" type="iServomotor" name="iServomotor" output="screen" respawn="true">
-  <param name="servo_period_angle_max" value="1740000"/>
+  <param name="servo_period_angle_max" value="1900000"/>
   <param name="servo_period_angle_0" value="1300000"/>
   <param name="servo_period_angle_min" value="1000000"/>
   <param name="servo_angle_max" value="45"/>
