@@ -25,9 +25,12 @@ if ! id | grep -q root; then
 	exit
 fi
 
-red="/sys/class/pwm/pwmchip0/pwm0"
-green="/sys/class/pwm/pwmchip1/pwm0"
-blue="/sys/class/pwm/pwmchip1/pwm1"
+ecapvar=`cat ./pwmswitch.txt`
+ehrpwmvar=`cat ./pwmservo.txt`
+
+red="/sys/class/pwm/${ecapvar}/pwm0"
+green="/sys/class/pwm/${ehrpwmvar}/pwm0"
+blue="/sys/class/pwm/${ehrpwmvar}/pwm1"
 
 arch=$(uname -m)
 
@@ -40,17 +43,17 @@ fi
 
 pwm_export () {
 	if [ ! -d ${red} ] ; then
-		echo 0 > /sys/class/pwm/pwmchip0/export || true
+		echo 0 > /sys/class/pwm/${ecapvar}/export || true
 	fi
 	if [ ! -d ${green} ] ; then
-		echo 0 > /sys/class/pwm/pwmchip1/export || true
+		echo 0 > /sys/class/pwm/${ehrpwmvar}/export || true
 	fi
 	if [ ! -d ${blue} ] ; then
-		echo 1 > /sys/class/pwm/pwmchip1/export || true
+		echo 1 > /sys/class/pwm/${ehrpwmvar}/export || true
 	fi
-chmod 646 /sys/class/pwm/pwmchip0/pwm0/duty_cycle
-chmod 646 /sys/class/pwm/pwmchip1/pwm0/duty_cycle
-chmod 646 /sys/class/pwm/pwmchip1/pwm1/duty_cycle
+chmod 646 /sys/class/pwm/${ecapvar}/pwm0/duty_cycle
+chmod 646 /sys/class/pwm/${ehrpwmvar}/pwm0/duty_cycle
+chmod 646 /sys/class/pwm/${ehrpwmvar}/pwm1/duty_cycle
 }
 
 
@@ -142,5 +145,5 @@ sleep 1
 #pwm_disable ${blue}
 sleep 1
 
-echo "PWM: all PWM's off"
+#echo "PWM: all PWM's off"
 
