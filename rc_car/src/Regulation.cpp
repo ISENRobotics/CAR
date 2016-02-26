@@ -7,13 +7,17 @@
 
 using namespace std;
 
-
-
+double lat=0;
+double lon=0;
+DISTANCE dis;
 
 void gps(const sensor_msgs::NavSatFixConstPtr& FIX)
 {
-  ROS_INFO("gps lat : %f    long : %f", FIX->latitude,FIX->longitude);
-
+  double d = dis.calculeDistance(FIX->latitude,FIX->longitude,lat,lon);
+  ROS_INFO("gps lat : %f    long : %f\n", FIX->latitude,FIX->longitude);
+  ROS_INFO("distacne : %f\n", d);
+  lat = FIX->latitude;
+  lon = FIX->longitude;
   
 }
 
