@@ -39,5 +39,5 @@
          * auto wlan0
          * iface wlan0 inet dhcp
          *      wpa-ssid "votre ssid"
-         *     wpa-psk "votre mdp"
+         *      wpa-psk "votre mdp"
   
