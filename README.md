@@ -40,4 +40,8 @@
          * iface wlan0 inet dhcp
          *      wpa-ssid "votre ssid"
          *      wpa-psk "votre mdp"
+
+## Lancer le programme ros
+   1. lancer le .launch
+      * roslaunch rc_car car.launch
   
