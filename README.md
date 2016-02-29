@@ -45,3 +45,8 @@
    1. lancer le .launch
       * roslaunch rc_car car.launch
   
+
+
+
+sudo apt-get install ros-indigo-geographic-msgs
+poiur robotlocalisation
