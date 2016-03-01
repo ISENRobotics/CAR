@@ -2,7 +2,7 @@
 
 ## Créer un catkin workspace:
    1. Prérequis 
-      * avoir installer ros indigo
+      * avoir installé ros indigo
    2. Créer le dossier et l'initialiser
       * mkdir -p ~/catkin_ws/src
       * cd ~/catkin_ws/src
@@ -11,7 +11,7 @@
       * cd ~/catkin_ws/
       * catkin_make
    4. Ajout setup.*sh en fonction de votre terminal
-      * si vous utiliser bash
+      * si vous utilisez bash
       * ajouter les lignes suivantes dans votre fichier .bashrc : 
          * #ros
          * source /opt/ros/indigo/setup.bash
@@ -22,7 +22,7 @@
    1. Clonner le git
       * git clone https://github.com/greatforce/CAR.git ~/catkin_ws/src
  
-## Initialisation des pwms
+## Initialisation des PWM
    1. Ajout de l'execution automatique de script 
       1. copier le fichier initpwm dans /etc/init.d
          * cp ~/catkin_ws/src/script/initpwm /etc/init.d/
@@ -43,13 +43,13 @@
 
 ## Configuration GPS
    1. Installer les paquets nécessaires
-         * sudo apt-get install gpsd gpsd-clients python-gps libgps-dev
+      * sudo apt-get install gpsd gpsd-clients python-gps libgps-dev
    2. (optionnel) Afficher directement les données issues du GPS
-         * sudo gpscat -s 4800 /dev/tty"votre USB"
+      * sudo gpscat -s 4800 /dev/tty"votre USB"
    3. (optionnel) Passer le GPS en NMEA
-         * gpsctl -n /dev/tty"votre USB"
+      * gpsctl -n /dev/tty"votre USB"
    4. (optionnel) Modifier le port GPS
-         * gpsd -S "votre port" /dev/tty"votre USB"
+      * gpsd -S "votre port" /dev/tty"votre USB"
 
 ## Lancer le programme ROS
    1. lancer le .launch
