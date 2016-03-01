@@ -93,7 +93,7 @@ for ( i = 0;i< pos.size();i++){
   LLtoUTM(atof(lat.c_str()), atof(lon.c_str()), northing, easting, zone);
   x.push_back(northing);
   y.push_back(-easting);
-  cerr << "lat : " << northing << "lon : " << easting << endl;
+  //cerr << "lat : " << northing << "lon : " << easting << endl;
 }
 
     
