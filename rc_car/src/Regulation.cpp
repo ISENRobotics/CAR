@@ -47,11 +47,9 @@ double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double>
     // Calcul du vecteur directeur de la droite (AB) passant par les waypoints A et B
     
     double AB;
-    vector<double> theta(2,0);
     vector<double> u(2,0);
     vector<double> AM(2,0);
     double e;
-    double a;
 
     AB = sqrt(pow(OB[0] - OA[0],2) + pow(OB[1] - OA[1],2)); // Norme de AB
     
@@ -63,16 +61,10 @@ double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double>
 
     //e = det([AM, u]); // Distance algébrique entre le point M et la droite (AB)
     e = (AM[0] * u[1]) - (AM[1] *u[0]);
-    a = atan2(e,R_MAX) + atan2(u[1],u[0]); // Angle de l'orientation souhaitée
-                                          // Somme de l'angle souhaitée par rapport à la droite
-                                          // et de l'angle de la droite par rapport à l'angle zéro
-    theta[0]=cos(a);
-    theta[1]=sin(a);
-
-    double theta_des = atan2(theta[1], theta[0]);
-    return theta_des;
-
- 
+    
+    return atan2(e,R_MAX) + atan2(u[1],u[0]); // Angle de l'orientation souhaitée
+                                              // Somme de l'angle souhaitée par rapport à la droite
+                                              // et de l'angle de la droite par rapport à l'angle zéro
 }
 
 // Fonction de calcul de la commande de l'angle des roues avant
