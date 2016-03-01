@@ -22,4 +22,6 @@
   <node name="teleop" pkg="rc_car" type="teleop"/>
    
 <node pkg="gpsd_client" type="gpsd_client" name="gpsd_client"  respawn="true"/>
+<node pkg="gps_common" type="utm_odometry_node" name="utm_odometry_node"  respawn="true"/>
+
 </launch>
