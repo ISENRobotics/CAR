@@ -28,7 +28,5 @@
   <node pkg="imu" type="imu_node.py" name="imu_node"  respawn="true">
   <param name="port" value="/dev/ttyS1"/>
   </node>
-
-<node pkg="rc_car" type="teleop.py" name="teleop" output="screen" respawn="true"/>
   
 </launch>
