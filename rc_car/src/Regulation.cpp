@@ -3,8 +3,10 @@
 #include "rc_car/defines.h"
 #include "rc_car/Command.h"
 #include "rc_car/RSRMsg.h"
+#include "rc_car/SwitchMsg.h"
+#include "rc_car/waypoint.h"
 #include <nav_msgs/Odometry.h>
-#include "rc_car/distance.h"
+#include <rc_car/YPR.h>
 #include <vector>
 #include <cmath>
 
@@ -16,23 +18,29 @@ vector<double> OA(2,0);
 vector<double> OB(2,0);
 double lat=0;
 double lon=0;
-DISTANCE dis;
+double theta=0;
+bool mode=false;
 
-void gps(const sensor_msgs::NavSatFixConstPtr& FIX)
-{
-  double d = dis.calculeDistance(FIX->latitude,FIX->longitude,lat,lon);
-  ROS_INFO("gps lat : %f    long : %f   distance : %f\n", FIX->latitude,FIX->longitude,d);
-
-  lat = FIX->latitude;
-  lon = FIX->longitude;
-  
-}
 void odome(const nav_msgs::OdometryConstPtr& ODOM)
 {
 	ROS_INFO("x : %f    y : %f   \n", ODOM->pose.pose.position.x,ODOM->pose.pose.position.y);
 
 OM[0]=ODOM->pose.pose.position.x;
 OM[1]=ODOM->pose.pose.position.y;
+}
+
+void imu(const rc_car::YPRConstPtr& YPR)
+{
+	ROS_INFO("Y : %f    P : %f  R: %f \n", YPR->Y,YPR->P,YPR->R);
+ 	theta=YPR->Y;
+
+}
+
+void Switch(const rc_car::SwitchMsgConstPtr& switchmsg)
+{
+	ROS_INFO("auto : %d    \n", switchmsg->modeAuto);
+ 	mode =  switchmsg->modeAuto;
+
 }
 
 double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double> OB, double R_MAX){
@@ -91,34 +99,62 @@ int main(int argc, char **argv)
 
   ros::NodeHandle n;
 
-  ros::Subscriber tfix = n.subscribe("fix", 1, gps);
-
-  ros::Subscriber todom = n.subscribe("odom", 1, odome);
   
+ 	ros::ServiceClient client = n.serviceClient<rc_car::waypoint>("waypoint");
+ 	 ros::Subscriber todom = n.subscribe("odom", 1, odome);
+ 	 ros::Subscriber timu = n.subscribe("imu", 1, imu);
+ 	 ros::Subscriber tswitch = n.subscribe("tSwitchMode", 1, Switch);
+   ros::Rate loop_rate(10);
   double R_max=2.5;
   double theta_des;
   double delta;
 
   
 
-  OM[0]=2.1100306116261573;
-  OM[1]=1.212674851791298;
-  OA[0]=1;
-  OA[1]=1;
-  OB[0]=-2;
-  OB[1]=2;
+
+
+rc_car::waypoint srv;
+
+int count = 0;
+    while (ros::ok())
+    {
+
+if (mode){
+
+	
+   srv.request.nb = count;
+   
+   if (client.call(srv))
+   {
+        ROS_INFO("x: %f   y: %f", srv.response.x,srv.response.y);
+   }
+   else
+   {
+    ROS_ERROR("Failed to call service add_two_ints");
+    return 1;
+   }
+
+ if(srv.request.nb == 0){
+  OA[0]=OM[0];
+  OA[1]=OM[1];
+}
+  OB[0]=srv.response.x;
+  OB[1]=srv.response.y;
+
   theta_des=orientationSouhaitee(OM,OA,OB,R_max);
 
   double angle_braq_max=M_PI/4;
-  delta=angleRoues(1.2020815280171306, theta_des, angle_braq_max);
+  delta=angleRoues(theta, theta_des, angle_braq_max);
+
+ ROS_INFO("OM1: %f  OM2: %f OA1: %f OA1: %f OB1: %f OB2: %f  \n", OM[0],OM[1],OA[0],OA[1],OB[0],OB[1]);
+  ROS_INFO("theta : %f    delta: %f    \n", theta,delta);
 
 
-  ROS_INFO("delta: %f    \n", delta);
-
-
-  	ros::spin();
-
-	
+  	ros::spinOnce();
+  	++count;
+}
+loop_rate.sleep();
+	}
 
   return 0;
 }

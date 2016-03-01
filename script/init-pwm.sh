@@ -51,9 +51,9 @@ pwm_export () {
 	if [ ! -d ${blue} ] ; then
 		echo 1 > /sys/class/pwm/${ehrpwmvar}/export || true
 	fi
-chmod 646 /sys/class/pwm/${ecapvar}/pwm0/duty_cycle
-chmod 646 /sys/class/pwm/${ehrpwmvar}/pwm0/duty_cycle
-chmod 646 /sys/class/pwm/${ehrpwmvar}/pwm1/duty_cycle
+chmod 646 /sys/class/pwm/${ecapvar}/pwm0/*
+chmod 646 /sys/class/pwm/${ehrpwmvar}/pwm0/*
+chmod 646 /sys/class/pwm/${ehrpwmvar}/pwm1/*
 }
 
 

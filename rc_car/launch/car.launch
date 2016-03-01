@@ -18,10 +18,17 @@
 
   <node pkg="rc_car" type="iSwitchMode" name="iSwitchMode" output="screen" respawn="true">
   </node>
+  <node pkg="rc_car" type="iRegulation" name="iRegulation" output="screen" respawn="true">
+  </node>
+  <node pkg="rc_car" type="iWayPoint" name="iWayPoint" output="screen" respawn="true">
+  </node>
+ 
+  <node pkg="gpsd_client" type="gpsd_client" name="gpsd_client"  respawn="true"/>
+  <node pkg="gps_common" type="utm_odometry_node" name="utm_odometry_node"  respawn="true"/>
+  <node pkg="imu" type="imu_node.py" name="imu_node"  respawn="true">
+  <param name="port" value="/dev/ttyS1"/>
+  </node>
 
-  <node name="teleop" pkg="rc_car" type="teleop"/>
-   
-<node pkg="gpsd_client" type="gpsd_client" name="gpsd_client"  respawn="true"/>
-<node pkg="gps_common" type="utm_odometry_node" name="utm_odometry_node"  respawn="true"/>
-
+<node pkg="rc_car" type="teleop.py" name="teleop"  respawn="true">
+  
 </launch>

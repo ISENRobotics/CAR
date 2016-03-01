@@ -23,13 +23,14 @@ find_package(Boost COMPONENTS bind)
    Command.msg
    RSRMsg.msg
    SwitchMsg.msg
+   YPR.msg
  )
 
 ## Generate services in the 'srv' folder
-#add_service_files(
- #  FILES
-  # AddTwoInts.srv
- #)
+add_service_files(
+   FILES
+   waypoint.srv
+ )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -47,7 +48,7 @@ find_package(Boost COMPONENTS bind)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES rc_car
-  CATKIN_DEPENDS message_runtime roscpp rospy std_msgs 
+  CATKIN_DEPENDS message_runtime roscpp rospy std_msgs  
   DEPENDS system_lib
 
 )
@@ -81,3 +82,9 @@ add_executable(iRegulation src/Regulation.cpp)
 target_link_libraries(iRegulation ${catkin_LIBRARIES})
 target_link_libraries(iRegulation distance)
 add_dependencies(iRegulation rc_car_generate_messages_cpp)
+
+add_executable(iWayPoint src/waypoint.cpp)
+target_link_libraries(iWayPoint ${catkin_LIBRARIES})
+add_dependencies(iWayPoint rc_car_gencpp)
+add_dependencies(iWayPoint rc_car_generate_messages_cp)
+
