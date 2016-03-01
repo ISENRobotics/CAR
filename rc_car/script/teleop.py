@@ -30,13 +30,14 @@
 import rospy
 
 from rc_car.msg import Command
+from rc_car.msg import SwitchMsg
 
 import sys, select, termios, tty
 
 msg = """
 Control Your CAR!
 ---------------------------
-Moving around:
+Moving around:   m : switch mode
         z     
    q    s    d
   
@@ -93,7 +94,10 @@ if __name__=="__main__":
     
     rospy.init_node('teleop')
     pub = rospy.Publisher('tCommand', Command, queue_size=1)
+    pubmode = rospy.Publisher('tSwitchMode', SwitchMsg, queue_size=1)
 
+    mode = SwitchMsg()
+    mode.modeAuto=False
     x = 0
     y = 0
     status = 0
@@ -133,6 +137,14 @@ if __name__=="__main__":
                 y = 0
                 control_speed = 0
                 control_turn = 0
+            elif key == 'm' :
+                if mode.modeAuto :
+                    mode.modeAuto=False
+                else :
+                    mode.modeAuto=True
+
+                pubmode.publish(mode)
+                print "modeauto : %d " % (mode.modeAuto)
             else:
                 count = count + 1
                 count1 = count1 + 1
@@ -164,7 +176,7 @@ if __name__=="__main__":
             #pub.publish(twist)
             #print vels(x,y)
             #print "-------" 
-            print vels(control_speed,control_turn)
+            #print vels(control_speed,control_turn)
 
 
             command = Command()

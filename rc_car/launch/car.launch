@@ -29,6 +29,5 @@
   <param name="port" value="/dev/ttyS1"/>
   </node>
 
-<node pkg="rc_car" type="teleop.py" name="teleop"  respawn="true">
   
 </launch>
