@@ -43,6 +43,25 @@ void Switch(const rc_car::SwitchMsgConstPtr& switchmsg)
 
 }
 
+// Fonction de calcul du critère de perpendicularité, produit scalaire de AB avec BM
+double criterePerp(vector<double> OM, vector<double> OA, vector<double> OB){
+    vector<double> AB(2) ;  // Vecteur AB
+    vector<double> BM(2) ; // Vecteur BM
+    double res;
+    AB[0]=OB[0]-OA[0];
+    BM[0]=OM[0]-OB[0];
+    AB[1]=OB[1]-OA[1];
+    BM[1]=OM[1]-OB[1];
+    res = AB[0]*BM[0]+AB[1]*BM[1]; // Produit scalaire de AB avec BM
+    return res;
+}
+
+// Fonction de calcul du critère de distance
+double critereDist(vector<double> OM, vector<double> OB, double R_MAX){
+    double res = pow((OM[0] - OB[0]),2) + pow((OM[1] - OB[1]),2) - pow(R_MAX,2);
+    return res;
+}
+
 double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double> OB, double R_MAX){
     // Calcul du vecteur directeur de la droite (AB) passant par les waypoints A et B
     
@@ -157,13 +176,21 @@ if (mode){
   cmd.speed=1;
   command_pub.publish(cmd);
 
+  if (critereDist(OM, OB, R_max)<=0 ){
+        count++;
+      }
+    else if (criterePerp(OM, OA, OB)>=0){
+        OA[0]=OM[0];
+        OA[1]=OM[1];
+    }
+
 
  ROS_INFO("OM1: %f  OM2: %f OA1: %f OA1: %f OB1: %f OB2: %f  \n", OM[0],OM[1],OA[0],OA[1],OB[0],OB[1]);
   ROS_INFO("theta : %f    delta: %f    \n", theta,delta);
 
 
   	ros::spinOnce();
-  	++count;
+  	
 }
 loop_rate.sleep();
 	}
