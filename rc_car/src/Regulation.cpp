@@ -12,7 +12,8 @@
 
 
 using namespace std;
-
+const double RADIANS_PER_DEGREE = M_PI/180.0;
+const double DEGREES_PER_RADIAN = 180.0/M_PI;
 vector<double> OM(2,0);
 vector<double> OA(2,0);
 vector<double> OB(2,0);
@@ -32,8 +33,9 @@ OM[1]=-ODOM->pose.pose.position.y;//- car esating
 void imu(const rc_car::YPRConstPtr& YPR)
 {
 	ROS_INFO("Y : %f    P : %f  R: %f \n", YPR->Y,YPR->P,YPR->R);
- 	theta=YPR->Y;
-
+ 	theta=YPR->Y*RADIANS_PER_DEGREE;
+  ROS_INFO("Y en rad: %f   \n", theta);
+  
 }
 
 void Switch(const rc_car::SwitchMsgConstPtr& switchmsg)
@@ -172,7 +174,7 @@ if (mode){
   theta_des=orientationSouhaitee(OM,OA,OB,R_max);
 
   double angle_braq_max=M_PI/4;
-  delta=angleRoues(theta, theta_des, angle_braq_max);
+  delta=angleRoues(theta, theta_des, angle_braq_max)*DEGREES_PER_RADIAN;
   cmd.dir=delta;
   cmd.speed=1;
   command_pub.publish(cmd);
@@ -190,6 +192,8 @@ if (mode){
 
  ROS_INFO("OM1: %f  OM2: %f OA1: %f OA1: %f OB1: %f OB2: %f  \n", OM[0],OM[1],OA[0],OA[1],OB[0],OB[1]);
   ROS_INFO("theta : %f    delta: %f    \n", theta,delta);
+
+ROS_INFO("theta en rad: %f    delta en deg: %f    \n", theta,delta);
 
 
   	
