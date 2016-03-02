@@ -175,7 +175,7 @@ if (mode){
 
   double angle_braq_max=M_PI/4;
   delta=angleRoues(theta, theta_des, angle_braq_max)*DEGREES_PER_RADIAN;
-  cmd.dir=delta;
+  cmd.dir=-delta;
   cmd.speed=1;
   command_pub.publish(cmd);
 
