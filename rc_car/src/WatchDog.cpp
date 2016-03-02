@@ -11,43 +11,42 @@
 #include <sys/types.h>
 #include <pwd.h>
 
-void refreshPWM_DCmotor(const rc_car::CommandConstPtr& cmd)
-{
-  float dutyPeriod = 0.0;
+ros::Timer gps_timer; // Préférer un ros::WallTimer ?
+double gps_timer_duration = 2;
 
-  ROS_INFO("iDCmotor received from tCommand: %f", cmd->speed);
+void gps_timer_callback(const ros::TimerEvent& a)
+{
+  ROS_INFO("gps_timer_callback triggered");
+}
+
+void tTest_callback(const std_msgs::String::ConstPtr& msg, ros::NodeHandle * n)
+{
+  ROS_INFO("iWatchDog received from tTest: %s", msg->data.c_str());
 
   // A chaque nouvelles coordonnées GPS reçues, démarrer un timer
   // si le timer dépasse une valeure limite, erreur et la voiture s'arrête
   // on peut prendre en compte le nombre de satellite dans l'erreur
 
+  gps_timer.setPeriod(ros::Duration(gps_timer_duration), true); // oneshot timer
+  gps_timer.start();
 }
 
-void RSR_process(const rc_car::RSRMsgConstPtr& RSR)
+void RSR_process(const rc_car::RSRMsg::ConstPtr& RSR)
 {
-  ROS_INFO("iDCmotor received from tRSR: %s %s", (RSR->run)?"run":"stop", (RSR->reset)?"reset":"no_reset");
+  ROS_INFO("iWatchDog received from tRSR: %s %s", (RSR->run)?"run":"stop", (RSR->reset)?"reset":"no_reset");
 
   if(!(RSR->run))
   {
-    if(!(pwmDCmotor.setRunningState(false)))
-    {
-      ROS_ERROR("iDCmotor unable to disable the DCmotor");
-    }
+
   }
   else
   {
-    if(!(pwmDCmotor.setRunningState(true)))
-    {
-      ROS_ERROR("iDCmotor unable to enable the DCmotor");
-    }
+
   }
 
   if(RSR->reset)
   {
-    if(!(pwmDCmotor.setDuty(0)))
-    {
-      ROS_ERROR("iDCmotor unable to reset the duty period");
-    }
+
   }
 }
 
@@ -58,11 +57,20 @@ int main(int argc, char **argv)
   ros::NodeHandle n;
 
   ros::Subscriber tRSR_sub = n.subscribe("tRSR", 1000, RSR_process);
-  ros::Subscriber tCommand_sub = n.subscribe("extended_fix", 1000, refreshPWM_DCmotor);
-  ros::Publisher tRSR_pub = n.advertise<RSRMsg>("tRSR", 1000);
+  ros::Subscriber tCommand_sub = n.subscribe<std_msgs::String>("tTest", 1000, boost::bind(&tTest_callback, _1, &n));
+  ros::Publisher tRSR_pub = n.advertise<rc_car::RSRMsg>("tRSR", 1000);
   //ros::Publisher tError_pub = n.advertise<Error>("tError", 1000);
 
+  if (n.getParam("iWatchDog/watchdog_gps_timer", gps_timer_duration))
+  {
+    ROS_INFO("iWatchDog got param /watchdog_gps_timer: %f\n", gps_timer_duration);
+  }
+  else
+  {
+    ROS_ERROR("Failed to get param /watchdog_gps_timer\n");
+  }
 
+  gps_timer = n.createTimer(ros::Duration(gps_timer_duration), gps_timer_callback, false);
 
   ros::spin();
 

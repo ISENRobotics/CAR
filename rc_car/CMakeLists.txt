@@ -88,3 +88,12 @@ target_link_libraries(iWayPoint ${catkin_LIBRARIES})
 add_dependencies(iWayPoint rc_car_gencpp)
 add_dependencies(iWayPoint rc_car_generate_messages_cp)
 
+add_executable(iWatchDog src/WatchDog.cpp)
+target_link_libraries(iWatchDog ${catkin_LIBRARIES})
+target_link_libraries(iWatchDog ${Boost_LIBRARIES})
+add_dependencies(iWatchDog rc_car_generate_messages_cpp)
+
+add_executable(Test src/test.cpp)
+target_link_libraries(Test ${catkin_LIBRARIES})
+target_link_libraries(Test ${Boost_LIBRARIES})
+add_dependencies(Test rc_car_generate_messages_cpp)
