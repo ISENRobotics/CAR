@@ -129,7 +129,8 @@ int main(int argc, char **argv)
 
    ros::Rate loop_rate(8);
    rc_car::Command cmd;
-  double R_max=0.5;
+  double Rayon_max=1;
+  double Couloir_max=0.5;
   double theta_des;
   double delta;
 
@@ -171,7 +172,7 @@ if (mode){
 
 
 
-  theta_des=orientationSouhaitee(OM,OA,OB,R_max);
+  theta_des=orientationSouhaitee(OM,OA,OB,Couloir_max);
 
   double angle_braq_max=M_PI/4;
   delta=angleRoues(theta, theta_des, angle_braq_max)*DEGREES_PER_RADIAN;
@@ -179,8 +180,12 @@ if (mode){
   cmd.speed=1;
   command_pub.publish(cmd);
 
-  if (critereDist(OM, OB, R_max)<=0 ){
+  if (critereDist(OM, OB, Rayon_max)<=0 ){
         count++;
+        mode =0;
+        cmd.dir=0;
+        cmd.speed=0;
+        command_pub.publish(cmd);
         ROS_INFO("count++");
       }
     else if (criterePerp(OM, OA, OB)>=0){
