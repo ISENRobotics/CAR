@@ -85,9 +85,9 @@ int main (int argc, char **argv) {
   priv_node.param<std::string>("child_frame_id", child_frame_id, "");
   priv_node.param<double>("rot_covariance", rot_cov, 99999.0);
 
-  odom_pub = node.advertise<nav_msgs::Odometry>("odom", 10);
+  odom_pub = node.advertise<nav_msgs::Odometry>("odom", 1);
 
-  ros::Subscriber fix_sub = node.subscribe("fix", 10, callback);
+  ros::Subscriber fix_sub = node.subscribe("fix", 1, callback);
 
   ros::spin();
 }

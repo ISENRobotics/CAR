@@ -78,7 +78,7 @@ double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double>
 // Fonction de calcul de la commande de l'angle des roues avant
 double angleRoues(double theta, double theta_des, double angle_braq_max){
     // Angle désiré des roues avant entre -pi et pi
-    double delta_des = fmod(theta_des - theta + M_PI, 2*M_PI) - M_PI;
+    double delta_des = fmod(fmod(theta_des - theta + M_PI, 2*M_PI)+2*M_PI,2*M_PI) - M_PI;
     double delta;
     // Seuillage de l'angle des roues avant pour limiter à l'angle de braquage maximum
     if (delta_des<(-angle_braq_max)) 
@@ -104,16 +104,18 @@ int main(int argc, char **argv)
  	 ros::Subscriber todom = n.subscribe("odom", 1, odome);
  	 ros::Subscriber timu = n.subscribe("imu", 1, imu);
  	 ros::Subscriber tswitch = n.subscribe("tSwitchMode", 1, Switch);
+   ros::Publisher command_pub = n.advertise<rc_car::Command>("tCommand", 10);
+
    ros::Rate loop_rate(10);
-  double R_max=2.5;
+   rc_car::Command cmd;
+  double R_max=0.5;
   double theta_des;
   double delta;
 
   
 
-
-
 rc_car::waypoint srv;
+
 
 int count = 0;
     while (ros::ok())
@@ -127,24 +129,34 @@ if (mode){
    if (client.call(srv))
    {
         ROS_INFO("x: %f   y: %f", srv.response.x,srv.response.y);
+        
    }
    else
    {
-    ROS_ERROR("Failed to call service add_two_ints");
+    ROS_ERROR("Failed to call service waypoint");
     return 1;
    }
 
  if(srv.request.nb == 0){
   OA[0]=OM[0];
   OA[1]=OM[1];
+}else{
+	OA[0]=OB[0];
+  OA[1]=OB[1];
 }
   OB[0]=srv.response.x;
   OB[1]=srv.response.y;
+
+
 
   theta_des=orientationSouhaitee(OM,OA,OB,R_max);
 
   double angle_braq_max=M_PI/4;
   delta=angleRoues(theta, theta_des, angle_braq_max);
+  cmd.dir=delta;
+  cmd.speed=1;
+  command_pub.publish(cmd);
+
 
  ROS_INFO("OM1: %f  OM2: %f OA1: %f OA1: %f OB1: %f OB2: %f  \n", OM[0],OM[1],OA[0],OA[1],OB[0],OB[1]);
   ROS_INFO("theta : %f    delta: %f    \n", theta,delta);
