@@ -117,8 +117,8 @@ int main(int argc, char **argv)
 
   ros::NodeHandle n;
 
-  ros::Subscriber tRSR_sub = n.subscribe("tRSR", 1000, RSR_process);
-  ros::Subscriber tCommand_sub = n.subscribe("tCommand", 1000, refreshPWM_DCmotor);
+  ros::Subscriber tRSR_sub = n.subscribe("tRSR", 1, RSR_process);
+  ros::Subscriber tCommand_sub = n.subscribe("tCommand", 1, refreshPWM_DCmotor);
   //ros::Publisher tError_pub = n.advertise<Error>("tError", 1000);
 
 

@@ -26,7 +26,7 @@ void odome(const nav_msgs::OdometryConstPtr& ODOM)
 	ROS_INFO("x : %f    y : %f   \n", ODOM->pose.pose.position.x,ODOM->pose.pose.position.y);
 
 OM[0]=ODOM->pose.pose.position.x;
-OM[1]=ODOM->pose.pose.position.y;
+OM[1]=-ODOM->pose.pose.position.y;//- car esating 
 }
 
 void imu(const rc_car::YPRConstPtr& YPR)
@@ -125,7 +125,7 @@ int main(int argc, char **argv)
  	 ros::Subscriber tswitch = n.subscribe("tSwitchMode", 1, Switch);
    ros::Publisher command_pub = n.advertise<rc_car::Command>("tCommand", 10);
 
-   ros::Rate loop_rate(10);
+   ros::Rate loop_rate(8);
    rc_car::Command cmd;
   double R_max=0.5;
   double theta_des;
@@ -135,12 +135,13 @@ int main(int argc, char **argv)
 
 rc_car::waypoint srv;
 
-
+ROS_INFO("deb reg");
 int count = 0;
     while (ros::ok())
     {
-
+ROS_INFO("boucle %d",mode);
 if (mode){
+  ROS_INFO("modeAuto");
 
 	
    srv.request.nb = count;
@@ -178,10 +179,12 @@ if (mode){
 
   if (critereDist(OM, OB, R_max)<=0 ){
         count++;
+        ROS_INFO("count++");
       }
     else if (criterePerp(OM, OA, OB)>=0){
         OA[0]=OM[0];
         OA[1]=OM[1];
+        ROS_INFO("criterePerp");
     }
 
 
@@ -189,9 +192,10 @@ if (mode){
   ROS_INFO("theta : %f    delta: %f    \n", theta,delta);
 
 
-  	ros::spinOnce();
+  	
   	
 }
+ros::spinOnce();
 loop_rate.sleep();
 	}
 
