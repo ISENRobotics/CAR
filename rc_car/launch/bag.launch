@@ -19,10 +19,12 @@
  
   <node pkg="rc_car" type="iRegulation" name="iRegulation" output="screen" respawn="true">
   </node>
-  <node pkg="rc_car" type="iWayPoint" name="iWayPoint"  respawn="true">
+  <node pkg="rc_car" type="iWayPoint" name="iWayPoint" output="screen" respawn="true">
   </node>
- 
+ <node pkg="gps_common" type="utm_odometry_node" name="utm_odometry_node"  respawn="true"/>
   
+  <node pkg="rc_car" type="iDebug" name="iDebug" output="screen" respawn="true">
+  </node>
 
   
 </launch>

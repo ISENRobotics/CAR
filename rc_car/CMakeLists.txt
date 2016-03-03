@@ -24,6 +24,7 @@ find_package(Boost COMPONENTS bind)
    RSRMsg.msg
    SwitchMsg.msg
    YPR.msg
+   debugmsg.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -88,3 +89,8 @@ target_link_libraries(iWayPoint ${catkin_LIBRARIES})
 add_dependencies(iWayPoint rc_car_gencpp)
 add_dependencies(iWayPoint rc_car_generate_messages_cp)
 
+
+add_executable(iDebug src/debug.cpp)
+target_link_libraries(iDebug ${catkin_LIBRARIES})
+add_dependencies(iDebug rc_car_generate_messages_cp)
+add_dependencies(iDebug rc_car_gencpp)
