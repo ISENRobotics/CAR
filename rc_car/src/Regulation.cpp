@@ -3,6 +3,7 @@
 #include "rc_car/defines.h"
 #include "rc_car/Command.h"
 #include "rc_car/RSRMsg.h"
+#include "rc_car/debugmsg.h"
 #include "rc_car/SwitchMsg.h"
 #include "rc_car/waypoint.h"
 #include <nav_msgs/Odometry.h>
@@ -14,27 +15,26 @@
 using namespace std;
 const double RADIANS_PER_DEGREE = M_PI/180.0;
 const double DEGREES_PER_RADIAN = 180.0/M_PI;
-vector<double> OM(2,0);
-vector<double> OA(2,0);
-vector<double> OB(2,0);
-double lat=0;
-double lon=0;
-double theta=0;
+vector<double> OM_GLOB(2,0);
+ros::Publisher debugmsg_pub;
+
+double thetaglobal=0;
+int indexglobal=1;
 bool mode=false;
 
 void odome(const nav_msgs::OdometryConstPtr& ODOM)
 {
 	ROS_INFO("x : %f    y : %f   \n", ODOM->pose.pose.position.x,ODOM->pose.pose.position.y);
 
-OM[0]=ODOM->pose.pose.position.x;
-OM[1]=-ODOM->pose.pose.position.y;//- car esating 
+OM_GLOB[0]=ODOM->pose.pose.position.x;
+OM_GLOB[1]=-ODOM->pose.pose.position.y;//- car esating 
 }
 
 void imu(const rc_car::YPRConstPtr& YPR)
 {
 	ROS_INFO("Y : %f    P : %f  R: %f \n", YPR->Y,YPR->P,YPR->R);
- 	theta=YPR->Y*RADIANS_PER_DEGREE;
-  ROS_INFO("Y en rad: %f   \n", theta);
+ 	thetaglobal=YPR->Y*RADIANS_PER_DEGREE;
+  ROS_INFO("Y en rad: %f   \n", thetaglobal);
   
 }
 
@@ -64,11 +64,11 @@ double critereDist(vector<double> OM, vector<double> OB, double R_MAX){
     return res;
 }
 
-double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double> OB, double R_MAX){
+double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double> OB, double R_MAX,double theta, double angle_braq_max){
     // Calcul du vecteur directeur de la droite (AB) passant par les waypoints A et B
     
     double AB;
-    vector<double> theta(2,0);
+    vector<double> thetadestmp(2,0);
     vector<double> u(2,0);
     vector<double> AM(2,0);
     double e;
@@ -84,21 +84,16 @@ double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double>
 
     //e = det([AM, u]); // Distance algébrique entre le point M et la droite (AB)
     e = (AM[0] * u[1]) - (AM[1] *u[0]);
-    a = atan2(e,R_MAX) + atan2(u[1],u[0]); // Angle de l'orientation souhaitée
+    a = atan(e/R_MAX) + atan2(u[1],u[0]);
+    //a = atan(e/R_MAX) + atan(u[1]/u[0]); // Angle de l'orientation souhaitée
                                           // Somme de l'angle souhaitée par rapport à la droite
                                           // et de l'angle de la droite par rapport à l'angle zéro
-    theta[0]=cos(a);
-    theta[1]=sin(a);
+    thetadestmp[0]=cos(a);
+    thetadestmp[1]=sin(a);
 
-    double theta_des = atan2(theta[1], theta[0]);
-    return theta_des;
+    double theta_des = atan2(thetadestmp[1], thetadestmp[0]);
+    
 
- 
-}
-
-// Fonction de calcul de la commande de l'angle des roues avant
-double angleRoues(double theta, double theta_des, double angle_braq_max){
-    // Angle désiré des roues avant entre -pi et pi
     double delta_des = fmod(fmod(theta_des - theta + M_PI, 2*M_PI)+2*M_PI,2*M_PI) - M_PI;
     double delta;
     // Seuillage de l'angle des roues avant pour limiter à l'angle de braquage maximum
@@ -109,8 +104,31 @@ double angleRoues(double theta, double theta_des, double angle_braq_max){
     else
         delta=delta_des;
 
+//publish debug msg
+      rc_car::debugmsg debmsg;
+      
+      debmsg.index = indexglobal;
+      debmsg.OM1 = OM[0];
+      debmsg.OM2 = OM[1];
+      debmsg.OA1 = OA[0];
+      debmsg.OA2 = OA[1];
+      debmsg.OB1 = OB[0];
+      debmsg.OB2 = OB[1];
+      debmsg.theta=theta*DEGREES_PER_RADIAN;
+      debmsg.thetades=theta_des*DEGREES_PER_RADIAN;
+      debmsg.a=a*DEGREES_PER_RADIAN;
+      debmsg.delta=delta*DEGREES_PER_RADIAN;
+ 
+      ROS_INFO("pub DEBUGGGGGGG");
+       
+     debugmsg_pub.publish(debmsg);
+
+      indexglobal=indexglobal+1;
+
+
     return delta;
 }
+
 
 
 
@@ -125,7 +143,8 @@ int main(int argc, char **argv)
  	 ros::Subscriber todom = n.subscribe("odom", 1, odome);
  	 ros::Subscriber timu = n.subscribe("imu", 1, imu);
  	 ros::Subscriber tswitch = n.subscribe("tSwitchMode", 1, Switch);
-   ros::Publisher command_pub = n.advertise<rc_car::Command>("tCommand", 10);
+   ros::Publisher command_pub = n.advertise<rc_car::Command>("tCommand", 1);
+   debugmsg_pub = n.advertise<rc_car::debugmsg>("tDebug", 100);
 
    ros::Rate loop_rate(8);
    rc_car::Command cmd;
@@ -133,8 +152,9 @@ int main(int argc, char **argv)
   double Couloir_max=0.5;
   double theta_des;
   double delta;
-
-  
+vector<double> OA(2,0);
+vector<double> OB(2,0);
+  int debut = 1;
 
 rc_car::waypoint srv;
 
@@ -144,7 +164,7 @@ int count = 0;
     {
 ROS_INFO("boucle %d",mode);
 if (mode){
-  ROS_INFO("modeAuto");
+  ROS_INFO("modeAuto count %d",count);
 
 	
    srv.request.nb = count;
@@ -160,45 +180,45 @@ if (mode){
     return 1;
    }
 
- if(srv.request.nb == 0){
-  OA[0]=OM[0];
-  OA[1]=OM[1];
-}else{
-	OA[0]=OB[0];
-  OA[1]=OB[1];
+ if(debut){
+  OA[0]=OM_GLOB[0];
+  OA[1]=OM_GLOB[1];
+  debut = 0;
 }
+
+
   OB[0]=srv.response.x;
   OB[1]=srv.response.y;
 
-
-
-  theta_des=orientationSouhaitee(OM,OA,OB,Couloir_max);
-
   double angle_braq_max=M_PI/4;
-  delta=angleRoues(theta, theta_des, angle_braq_max)*DEGREES_PER_RADIAN;
+
+
+  delta=orientationSouhaitee(OM_GLOB,OA,OB,Couloir_max,thetaglobal,angle_braq_max)*DEGREES_PER_RADIAN;
+
   cmd.dir=-delta;
   cmd.speed=1;
   command_pub.publish(cmd);
 
-  if (critereDist(OM, OB, Rayon_max)<=0 ){
+  if (critereDist(OM_GLOB, OB, Rayon_max)<=0 ){
         count++;
-        mode =0;
+        //mode =0;
         cmd.dir=0;
         cmd.speed=0;
         command_pub.publish(cmd);
+          OA[0]=OB[0];
+          OA[1]=OB[1];
         ROS_INFO("count++");
       }
-    else if (criterePerp(OM, OA, OB)>=0){
-        OA[0]=OM[0];
-        OA[1]=OM[1];
+    else if (criterePerp(OM_GLOB, OA, OB)>=0){
+      //  OA[0]=OM_GLOB[0];
+      //  OA[1]=OM_GLOB[1];
         ROS_INFO("criterePerp");
     }
 
 
- ROS_INFO("OM1: %f  OM2: %f OA1: %f OA1: %f OB1: %f OB2: %f  \n", OM[0],OM[1],OA[0],OA[1],OB[0],OB[1]);
-  ROS_INFO("theta : %f    delta: %f    \n", theta,delta);
+ ROS_INFO("OM1: %f  OM2: %f OA1: %f OA1: %f OB1: %f OB2: %f  \n", OM_GLOB[0],OM_GLOB[1],OA[0],OA[1],OB[0],OB[1]);
 
-ROS_INFO("theta en rad: %f    delta en deg: %f    \n", theta,delta);
+ROS_INFO("    delta en deg: %f    \n",delta); 
 
 
   	
