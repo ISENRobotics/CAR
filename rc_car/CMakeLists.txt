@@ -24,6 +24,8 @@ find_package(Boost COMPONENTS bind)
    RSRMsg.msg
    SwitchMsg.msg
    YPR.msg
+   GPSFix.msg
+   GPSStatus.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -86,14 +88,14 @@ add_dependencies(iRegulation rc_car_generate_messages_cpp)
 add_executable(iWayPoint src/waypoint.cpp)
 target_link_libraries(iWayPoint ${catkin_LIBRARIES})
 add_dependencies(iWayPoint rc_car_gencpp)
-add_dependencies(iWayPoint rc_car_generate_messages_cp)
+add_dependencies(iWayPoint rc_car_generate_messages_cpp)
 
-add_executable(iWatchDog src/WatchDog.cpp)
-target_link_libraries(iWatchDog ${catkin_LIBRARIES})
-target_link_libraries(iWatchDog ${Boost_LIBRARIES})
-add_dependencies(iWatchDog rc_car_generate_messages_cpp)
+add_executable(WatchDog src/WatchDog.cpp)
+target_link_libraries(WatchDog ${catkin_LIBRARIES})
+target_link_libraries(WatchDog ${Boost_LIBRARIES})
+add_dependencies(WatchDog rc_car_generate_messages_cpp)
 
-add_executable(Test src/test.cpp)
-target_link_libraries(Test ${catkin_LIBRARIES})
-target_link_libraries(Test ${Boost_LIBRARIES})
-add_dependencies(Test rc_car_generate_messages_cpp)
+#add_executable(Test src/test.cpp)
+#target_link_libraries(Test ${catkin_LIBRARIES})
+#target_link_libraries(Test ${Boost_LIBRARIES})
+#add_dependencies(Test rc_car_generate_messages_cpp)

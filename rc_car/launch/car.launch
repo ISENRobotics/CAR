@@ -29,5 +29,9 @@
   <param name="port" value="/dev/ttyS1"/>
   </node>
 
+  <node pkg="rc_car" type="WatchDog" name="WatchDog" output="screen" respawn="true">
+  <param name="gps_timer_duration" value="2"/>
+  </node>
+
   
 </launch>
