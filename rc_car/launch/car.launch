@@ -4,8 +4,8 @@
   <param name="DCmotor_period_speed_max" value="1950000"/>
   <param name="DCmotor_period_speed_0" value="1480000"/>
   <param name="DCmotor_period_speed_min" value="800000"/>
-  <param name="DCmotor_speed_max" value="1"/>
-  <param name="DCmotor_speed_min" value="-1"/>
+  <param name="DCmotor_speed_max" value="2.5"/>
+  <param name="DCmotor_speed_min" value="-2.5"/>
   </node>
 
   <node pkg="rc_car" type="iServomotor" name="iServomotor" output="screen" respawn="true">
