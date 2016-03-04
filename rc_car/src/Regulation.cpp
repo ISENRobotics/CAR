@@ -155,7 +155,7 @@ int main(int argc, char **argv)
 
    ros::Rate loop_rate(10);
    rc_car::Command cmd;
-  double Rayon_max=1;
+  double Rayon_max=2;
   double Couloir_max=2;
   double theta_des;
   double delta;
