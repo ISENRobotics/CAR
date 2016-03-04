@@ -31,7 +31,7 @@
   </node>
 
   <node pkg="rc_car" type="WatchDog" name="WatchDog" output="screen" respawn="true">
-  <param name="gps_timer_duration" value="2"/>
+  <param name="watchdog_gps_timer" value="2"/>
   </node>
 
 </launch>
