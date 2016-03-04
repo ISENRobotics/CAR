@@ -16,11 +16,20 @@ using namespace std;
 const double RADIANS_PER_DEGREE = M_PI/180.0;
 const double DEGREES_PER_RADIAN = 180.0/M_PI;
 vector<double> OM_GLOB(2,0);
+double latglob,longlob;
 ros::Publisher debugmsg_pub;
 
 double thetaglobal=0;
 int indexglobal=1;
 bool mode=false;
+
+void fixll(const sensor_msgs::NavSatFixConstPtr& fix) {
+ 
+ ROS_INFO("lat : %f    longi : %f   \n", fix->latitude , fix->longitude);
+
+  latglob = fix->latitude;
+  longlob = fix->longitude;
+}
 
 void odome(const nav_msgs::OdometryConstPtr& ODOM)
 {
@@ -64,14 +73,14 @@ double critereDist(vector<double> OM, vector<double> OB, double R_MAX){
     return res;
 }
 
-double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double> OB, double R_MAX,double theta, double angle_braq_max){
+double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double> OB, double R_MAX,double theta, double angle_braq_max, double lat, double lon){
     // Calcul du vecteur directeur de la droite (AB) passant par les waypoints A et B
     
     double AB;
-    vector<double> thetadestmp(2,0);
     vector<double> u(2,0);
     vector<double> AM(2,0);
     double e;
+    
 
     AB = sqrt(pow(OB[0] - OA[0],2) + pow(OB[1] - OA[1],2)); // Norme de AB
     
@@ -83,13 +92,10 @@ double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double>
 
     //e = det([AM, u]); // Distance algébrique entre le point M et la droite (AB)
     e = (AM[0] * u[1]) - (AM[1] *u[0]);
-    a = atan(e/R_MAX) + atan2(u[1],u[0]);
+    double theta_des = atan(e/R_MAX) + atan2(u[1],u[0]);
     //a = atan(e/R_MAX) + atan(u[1]/u[0]); // Angle de l'orientation souhaitée
                                               // Somme de l'angle souhaitée par rapport à la droite
                                               // et de l'angle de la droite par rapport à l'angle zéro
-    thetadestmp[0]=cos(a);
-    thetadestmp[1]=sin(a);
-    double theta_des = atan2(thetadestmp[1], thetadestmp[0]);
     
 
     double delta_des = fmod(fmod(theta_des - theta + M_PI, 2*M_PI)+2*M_PI,2*M_PI) - M_PI;
@@ -106,6 +112,8 @@ double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double>
       rc_car::debugmsg debmsg;
       
       debmsg.index = indexglobal;
+      debmsg.lat = lat;
+      debmsg.lon = lon;
       debmsg.OM1 = OM[0];
       debmsg.OM2 = OM[1];
       debmsg.OA1 = OA[0];
@@ -114,7 +122,6 @@ double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double>
       debmsg.OB2 = OB[1];
       debmsg.theta=theta*DEGREES_PER_RADIAN;
       debmsg.thetades=theta_des*DEGREES_PER_RADIAN;
-      debmsg.a=a*DEGREES_PER_RADIAN;
       debmsg.delta=delta*DEGREES_PER_RADIAN;
  
       ROS_INFO("pub DEBUGGGGGGG");
@@ -138,11 +145,13 @@ int main(int argc, char **argv)
 
   
  	ros::ServiceClient client = n.serviceClient<rc_car::waypoint>("waypoint");
+  ros::Subscriber fix_sub = n.subscribe("fix", 1, fixll);
  	 ros::Subscriber todom = n.subscribe("odom", 1, odome);
  	 ros::Subscriber timu = n.subscribe("imu", 1, imu);
  	 ros::Subscriber tswitch = n.subscribe("tSwitchMode", 1, Switch);
    ros::Publisher command_pub = n.advertise<rc_car::Command>("tCommand", 1);
    debugmsg_pub = n.advertise<rc_car::debugmsg>("tDebug", 100);
+
 
    ros::Rate loop_rate(8);
    rc_car::Command cmd;
@@ -191,7 +200,7 @@ if (mode){
   double angle_braq_max=M_PI/4;
 
 
-  delta=orientationSouhaitee(OM_GLOB,OA,OB,Couloir_max,thetaglobal,angle_braq_max)*DEGREES_PER_RADIAN;
+  delta=orientationSouhaitee(OM_GLOB,OA,OB,Couloir_max,thetaglobal,angle_braq_max,latglob,longlob)*DEGREES_PER_RADIAN;
 
   cmd.dir=-delta;
   cmd.speed=1;
