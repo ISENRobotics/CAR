@@ -153,10 +153,10 @@ int main(int argc, char **argv)
    debugmsg_pub = n.advertise<rc_car::debugmsg>("tDebug", 100);
 
 
-   ros::Rate loop_rate(8);
+   ros::Rate loop_rate(10);
    rc_car::Command cmd;
   double Rayon_max=1;
-  double Couloir_max=0.5;
+  double Couloir_max=2;
   double theta_des;
   double delta;
 vector<double> OA(2,0);
@@ -169,7 +169,7 @@ ROS_INFO("deb reg");
 int count = 0;
     while (ros::ok())
     {
-ROS_INFO("boucle %d",mode);
+
 if (mode){
   ROS_INFO("modeAuto count %d",count);
 
@@ -178,6 +178,7 @@ if (mode){
    
    if (client.call(srv))
    {
+
         ROS_INFO("x: %f   y: %f", srv.response.x,srv.response.y);
         
    }
@@ -214,6 +215,9 @@ if (mode){
         command_pub.publish(cmd);
           OA[0]=OB[0];
           OA[1]=OB[1];
+          if (count==srv.response.total){
+            mode=0;
+          }
         ROS_INFO("count++");
       }
     else if (criterePerp(OM_GLOB, OA, OB)>=0){
@@ -223,9 +227,9 @@ if (mode){
     }
 
 
- ROS_INFO("OM1: %f  OM2: %f OA1: %f OA1: %f OB1: %f OB2: %f  \n", OM_GLOB[0],OM_GLOB[1],OA[0],OA[1],OB[0],OB[1]);
+ //ROS_INFO("OM1: %f  OM2: %f OA1: %f OA1: %f OB1: %f OB2: %f  \n", OM_GLOB[0],OM_GLOB[1],OA[0],OA[1],OB[0],OB[1]);
 
-ROS_INFO("    delta en deg: %f    \n",delta); 
+//ROS_INFO("    delta en deg: %f    \n",delta); 
 
 
   	

@@ -53,7 +53,8 @@ bool waypoint(rc_car::waypoint::Request  &req,
  {
    res.x = x[req.nb];
    res.y = y[req.nb];
-   ROS_INFO("request: nb=%d", (int)req.nb);
+   res.total = x.size();
+   ROS_INFO("request: nb=%d sur total : %d", (int)req.nb,res.total);
    ROS_INFO("sending back response: x[%f]  y[%f]", res.x,res.y);
    return true;
 }
