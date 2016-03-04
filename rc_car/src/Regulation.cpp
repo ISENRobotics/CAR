@@ -94,8 +94,8 @@ double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double>
     e = (AM[0] * u[1]) - (AM[1] *u[0]);
     double theta_des = atan(e/R_MAX) + atan2(u[1],u[0]);
     //a = atan(e/R_MAX) + atan(u[1]/u[0]); // Angle de l'orientation souhaitée
-                                          // Somme de l'angle souhaitée par rapport à la droite
-                                          // et de l'angle de la droite par rapport à l'angle zéro
+                                              // Somme de l'angle souhaitée par rapport à la droite
+                                              // et de l'angle de la droite par rapport à l'angle zéro
     
 
     double delta_des = fmod(fmod(theta_des - theta + M_PI, 2*M_PI)+2*M_PI,2*M_PI) - M_PI;
