@@ -1,0 +1,30 @@
+<launch>
+  
+  <node pkg="rc_car" type="iDCmotor" name="iDCmotor"  respawn="true">
+  <param name="DCmotor_period_speed_max" value="1950000"/>
+  <param name="DCmotor_period_speed_0" value="1480000"/>
+  <param name="DCmotor_period_speed_min" value="800000"/>
+  <param name="DCmotor_speed_max" value="1"/>
+  <param name="DCmotor_speed_min" value="-1"/>
+  </node>
+
+  <node pkg="rc_car" type="iServomotor" name="iServomotor"  respawn="true">
+  <param name="servo_period_angle_max" value="1900000"/>
+  <param name="servo_period_angle_0" value="1300000"/>
+  <param name="servo_period_angle_min" value="1000000"/>
+  <param name="servo_angle_max" value="45"/>
+  <param name="servo_angle_min" value="-45"/>
+  </node>
+
+ 
+  <node pkg="rc_car" type="iRegulation" name="iRegulation" output="screen" respawn="true">
+  </node>
+  <node pkg="rc_car" type="iWayPoint" name="iWayPoint" output="screen" respawn="true">
+  </node>
+ <node pkg="gps_common" type="utm_odometry_node" name="utm_odometry_node"  respawn="true"/>
+  
+  <node pkg="rc_car" type="iDebug" name="iDebug" output="screen" respawn="true">
+  </node>
+
+  
+</launch>

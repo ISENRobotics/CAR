@@ -26,6 +26,7 @@ find_package(Boost COMPONENTS bind)
    YPR.msg
    GPSFix.msg
    GPSStatus.msg
+   debugmsg.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -94,6 +95,11 @@ add_executable(WatchDog src/WatchDog.cpp)
 target_link_libraries(WatchDog ${catkin_LIBRARIES})
 target_link_libraries(WatchDog ${Boost_LIBRARIES})
 add_dependencies(WatchDog rc_car_generate_messages_cpp)
+
+add_executable(iDebug src/debug.cpp)
+target_link_libraries(iDebug ${catkin_LIBRARIES})
+add_dependencies(iDebug rc_car_generate_messages_cp)
+add_dependencies(iDebug rc_car_gencpp)
 
 #add_executable(Test src/test.cpp)
 #target_link_libraries(Test ${catkin_LIBRARIES})
