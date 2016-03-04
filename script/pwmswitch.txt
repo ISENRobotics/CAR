@@ -1,1 +1,1 @@
-pwmchip2
+pwmchip0

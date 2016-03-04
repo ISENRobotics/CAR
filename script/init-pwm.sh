@@ -42,13 +42,13 @@ if [ "x${arch}" != "xarmv7l" ] ; then
 fi
 
 pwm_export () {
-	if [ ! -d ${red} ] ; then
+	if [ ! -d ${switch} ] ; then
 		echo 0 > /sys/class/pwm/${ecapvar}/export || true
 	fi
-	if [ ! -d ${green} ] ; then
+	if [ ! -d ${servo} ] ; then
 		echo 0 > /sys/class/pwm/${ehrpwmvar}/export || true
 	fi
-	if [ ! -d ${blue} ] ; then
+	if [ ! -d ${dc} ] ; then
 		echo 1 > /sys/class/pwm/${ehrpwmvar}/export || true
 	fi
 chmod 646 /sys/class/pwm/${ecapvar}/pwm0/*
