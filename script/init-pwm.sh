@@ -28,9 +28,9 @@ fi
 ecapvar=`cat ./pwmswitch.txt`
 ehrpwmvar=`cat ./pwmservo.txt`
 
-red="/sys/class/pwm/${ecapvar}/pwm0"
-green="/sys/class/pwm/${ehrpwmvar}/pwm0"
-blue="/sys/class/pwm/${ehrpwmvar}/pwm1"
+switch="/sys/class/pwm/${ecapvar}/pwm0"
+servo="/sys/class/pwm/${ehrpwmvar}/pwm0"
+dc="/sys/class/pwm/${ehrpwmvar}/pwm1"
 
 arch=$(uname -m)
 
@@ -98,11 +98,11 @@ pwm_disable () {
 }
 
 pwm_disable_all () {
-	pwm_disable_simple ${red}
+	pwm_disable_simple ${dc}
 	sleep 1
-	pwm_disable_simple ${green}
+	pwm_disable_simple ${servo}
 	sleep 1
-	pwm_disable_simple ${blue}
+	pwm_disable_simple ${switch}
 	sleep 1
 }
 
@@ -118,7 +118,7 @@ pwm_disable_all
 echo "PWM: red led"
 period="14000000"
 duty_cycle="0" 
-pwm_enable ${red}
+pwm_enable ${switch}
 sleep 1
 #pwm_disable ${red}
 sleep 1
@@ -128,8 +128,8 @@ sleep 1
 #chip1 pwm0
 echo "PWM: green led"
 period="14000000"
-duty_cycle="1000" #1,34ms 0servo
-pwm_enable ${green}
+duty_cycle="1300000" #1,34ms 0servo
+pwm_enable ${servo}
 sleep 1
 #pwm_disable ${green}
 sleep 1
@@ -139,8 +139,8 @@ sleep 1
 #chip1 pwm1
 echo "PWM: blue led"
 period="14000000"
-duty_cycle="1460000" #1,46ms 0motorDC
-pwm_enable ${blue}
+duty_cycle="1480000" #1,46ms 0motorDC
+pwm_enable ${dc}
 sleep 1
 #pwm_disable ${blue}
 sleep 1
