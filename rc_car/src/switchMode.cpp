@@ -51,8 +51,8 @@ void switch_PWM_source(const rc_car::SwitchMsgConstPtr& switchMsg, ros::Publishe
     {
       ROS_ERROR("iSwitchMode unable to set the duty period");
     }
-    msg.run = true;
-    msg.reset = false;
+    msg.run = 1;
+    msg.reset = 0;
     tRSR_pub->publish(msg);
   }
   else
@@ -61,8 +61,8 @@ void switch_PWM_source(const rc_car::SwitchMsgConstPtr& switchMsg, ros::Publishe
     {
       ROS_ERROR("iSwitchMode unable to set the duty period");
     }
-    msg.run = false;
-    msg.reset = false;
+    msg.run = 0;
+    msg.reset = 0;
     tRSR_pub->publish(msg);
   }
 }

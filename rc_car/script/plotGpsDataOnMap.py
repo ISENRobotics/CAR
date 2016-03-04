@@ -36,7 +36,7 @@ def initialisation():
 
     #display the image under the graph
     #read a png file to map on
-    imgMap = plt.imread('mapISEN.png')
+    imgMap = plt.imread('/home/victorien/catkin_ws/src/rc_car/script/mapISEN.png')
     implot = plt.imshow(imgMap,extent=[BLX, TRX, BLY, TRY])
     plt.show()
 
