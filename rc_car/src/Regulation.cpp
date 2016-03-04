@@ -209,10 +209,7 @@ if (mode){
 
   if (critereDist(OM_GLOB, OB, Rayon_max)<=0 ){
         count++;
-        //mode =0;
-        cmd.dir=0;
-        cmd.speed=0;
-        command_pub.publish(cmd);
+
           OA[0]=OB[0];
           OA[1]=OB[1];
           if (count==srv.response.total){
