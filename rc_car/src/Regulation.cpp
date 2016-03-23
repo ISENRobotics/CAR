@@ -100,6 +100,8 @@ double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double>
 
     double delta_des = fmod(fmod(theta_des - theta + M_PI, 2*M_PI)+2*M_PI,2*M_PI) - M_PI;
     double delta;
+    //deg rad to deg
+    delta_des=delta_des*DEGREES_PER_RADIAN;
     // Seuillage de l'angle des roues avant pour limiter à l'angle de braquage maximum
     if (delta_des<(-angle_braq_max)) 
         delta=-angle_braq_max;
@@ -122,7 +124,7 @@ double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double>
       debmsg.OB2 = OB[1];
       debmsg.theta=theta*DEGREES_PER_RADIAN;
       debmsg.thetades=theta_des*DEGREES_PER_RADIAN;
-      debmsg.delta=delta*DEGREES_PER_RADIAN;
+      debmsg.delta=delta;
  
       ROS_INFO("pub DEBUGGGGGGG");
        
@@ -198,7 +200,7 @@ if (mode){
   OB[0]=srv.response.x;
   OB[1]=srv.response.y;
 
-  double angle_braq_max=M_PI/4;
+  double angle_braq_max=45;
 
 
   delta=orientationSouhaitee(OM_GLOB,OA,OB,Couloir_max,thetaglobal,angle_braq_max,latglob,longlob)*DEGREES_PER_RADIAN;
