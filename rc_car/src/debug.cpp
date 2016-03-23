@@ -37,7 +37,7 @@ void debug(const rc_car::debugmsg::ConstPtr& debmsg)
        FILE * fp;
 
    fp = fopen (path.c_str(), "a");
-   fprintf(fp, "%ld,%10.10f,%10.10f,%10.10f,%10.10f,%10.10f,%10.10f,%10.10f,%10.10f,%10.10f,%10.10f,%10.10f\n",debmsg->lat,debmsg->lon, debmsg->index,debmsg->OM1,debmsg->OM2,debmsg->OA1,debmsg->OA2,debmsg->OB1,debmsg->OB2,debmsg->theta,debmsg->thetades,debmsg->delta);
+   fprintf(fp, "%ld,%10.10f,%10.10f,%10.10f,%10.10f,%10.10f,%10.10f,%10.10f,%10.10f,%10.10f,%10.10f,%10.10f\n",debmsg->index,debmsg->lat,debmsg->lon,debmsg->OM1,debmsg->OM2,debmsg->OA1,debmsg->OA2,debmsg->OB1,debmsg->OB2,debmsg->theta,debmsg->thetades,debmsg->delta);
  
    
    fclose(fp);
