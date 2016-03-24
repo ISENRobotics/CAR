@@ -214,8 +214,8 @@ if (mode){
 
   delta=orientationSouhaitee(OM_GLOB,OA,OB,Couloir_max,thetaglobal,angle_braq_max,latglob,longlob);
 
-  cmd.dir=delta*DEGREES_PER_RADIAN;
-  cmd.speed=8;
+  cmd.dir=-delta*DEGREES_PER_RADIAN;
+  cmd.speed=1;
   command_pub.publish(cmd);
 
   if (critereDist(OM_GLOB, OB, Rayon_max)<=0 ){
