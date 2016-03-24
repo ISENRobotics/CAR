@@ -92,16 +92,25 @@ double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double>
 
     //e = det([AM, u]); // Distance algébrique entre le point M et la droite (AB)
     e = (AM[0] * u[1]) - (AM[1] *u[0]);
-    double theta_des = atan(e/R_MAX) + atan2(u[1],u[0]);
-    //a = atan(e/R_MAX) + atan(u[1]/u[0]); // Angle de l'orientation souhaitée
+    double theta_des = atan2(e,R_MAX) + atan2(u[1],u[0]);
+   // double a = atan(e/R_MAX) + atan(u[1]/u[0]); // Angle de l'orientation souhaitée
                                               // Somme de l'angle souhaitée par rapport à la droite
+                    
                                               // et de l'angle de la droite par rapport à l'angle zéro
-    
+   // double theta_y=cos(a);
+   // double theta_x=sin(a);
+   // theta_des = atan(theta_y/ theta_x);
+    while (theta_des < -M_PI){
+      theta_des=theta_des+2*M_PI;
+    }
+    while (theta_des > M_PI){
+      theta_des=theta_des-2*M_PI;
+    }
 
     double delta_des = fmod(fmod(theta_des - theta + M_PI, 2*M_PI)+2*M_PI,2*M_PI) - M_PI;
     double delta;
     //deg rad to deg
-    delta_des=delta_des*DEGREES_PER_RADIAN;
+    //delta_des=delta_des*DEGREES_PER_RADIAN;
     // Seuillage de l'angle des roues avant pour limiter à l'angle de braquage maximum
     if (delta_des<(-angle_braq_max)) 
         delta=-angle_braq_max;
@@ -124,7 +133,7 @@ double orientationSouhaitee(vector<double> OM, vector<double> OA, vector<double>
       debmsg.OB2 = OB[1];
       debmsg.theta=theta*DEGREES_PER_RADIAN;
       debmsg.thetades=theta_des*DEGREES_PER_RADIAN;
-      debmsg.delta=delta;
+      debmsg.delta=delta*DEGREES_PER_RADIAN;
  
       ROS_INFO("pub DEBUGGGGGGG");
        
@@ -157,7 +166,7 @@ int main(int argc, char **argv)
 
    ros::Rate loop_rate(10);
    rc_car::Command cmd;
-  double Rayon_max=2;
+  double Rayon_max=3;
   double Couloir_max=2;
   double theta_des;
   double delta;
@@ -200,13 +209,13 @@ if (mode){
   OB[0]=srv.response.x;
   OB[1]=srv.response.y;
 
-  double angle_braq_max=45;
+  double angle_braq_max=M_PI/6.0;
 
 
-  delta=orientationSouhaitee(OM_GLOB,OA,OB,Couloir_max,thetaglobal,angle_braq_max,latglob,longlob)*DEGREES_PER_RADIAN;
+  delta=orientationSouhaitee(OM_GLOB,OA,OB,Couloir_max,thetaglobal,angle_braq_max,latglob,longlob);
 
-  cmd.dir=-delta;
-  cmd.speed=1;
+  cmd.dir=delta*DEGREES_PER_RADIAN;
+  cmd.speed=8;
   command_pub.publish(cmd);
 
   if (critereDist(OM_GLOB, OB, Rayon_max)<=0 ){
@@ -220,8 +229,8 @@ if (mode){
         ROS_INFO("count++");
       }
     else if (criterePerp(OM_GLOB, OA, OB)>=0){
-      //  OA[0]=OM_GLOB[0];
-      //  OA[1]=OM_GLOB[1];
+        OA[0]=OM_GLOB[0];
+        OA[1]=OM_GLOB[1];
         ROS_INFO("criterePerp");
     }
 
