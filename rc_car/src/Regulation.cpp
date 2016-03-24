@@ -167,7 +167,7 @@ int main(int argc, char **argv)
    ros::Rate loop_rate(10);
    rc_car::Command cmd;
   double Rayon_max=3;
-  double Couloir_max=2;
+  double Couloir_max=4;
   double theta_des;
   double delta;
 vector<double> OA(2,0);
