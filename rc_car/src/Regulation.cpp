@@ -167,7 +167,7 @@ int main(int argc, char **argv)
    ros::Rate loop_rate(10);
    rc_car::Command cmd;
   double Rayon_max=3;
-  double Couloir_max=2;
+  double Couloir_max=4;
   double theta_des;
   double delta;
 vector<double> OA(2,0);
@@ -214,8 +214,8 @@ if (mode){
 
   delta=orientationSouhaitee(OM_GLOB,OA,OB,Couloir_max,thetaglobal,angle_braq_max,latglob,longlob);
 
-  cmd.dir=delta*DEGREES_PER_RADIAN;
-  cmd.speed=8;
+  cmd.dir=-delta*DEGREES_PER_RADIAN;
+  cmd.speed=1;
   command_pub.publish(cmd);
 
   if (critereDist(OM_GLOB, OB, Rayon_max)<=0 ){
