@@ -42,7 +42,7 @@ OM_GLOB[1]=-ODOM->pose.pose.position.y;//- car esating
 void imu(const rc_car::YPRConstPtr& YPR)
 {
 	ROS_INFO("Y : %f    P : %f  R: %f \n", YPR->Y,YPR->P,YPR->R);
- 	thetaglobal=YPR->Y*RADIANS_PER_DEGREE;
+ 	thetaglobal=-YPR->Y*RADIANS_PER_DEGREE;
   ROS_INFO("Y en rad: %f   \n", thetaglobal);
   
 }
@@ -214,7 +214,7 @@ if (mode){
 
   delta=orientationSouhaitee(OM_GLOB,OA,OB,Couloir_max,thetaglobal,angle_braq_max,latglob,longlob);
 
-  cmd.dir=-delta*DEGREES_PER_RADIAN;
+  cmd.dir=delta*DEGREES_PER_RADIAN;
   cmd.speed=1;
   command_pub.publish(cmd);
 
@@ -224,7 +224,12 @@ if (mode){
           OA[0]=OB[0];
           OA[1]=OB[1];
           if (count==srv.response.total){
+cmd.dir=0;
+  cmd.speed=0;
+             command_pub.publish(cmd);
             mode=0;
+
+
           }
         ROS_INFO("count++");
       }
