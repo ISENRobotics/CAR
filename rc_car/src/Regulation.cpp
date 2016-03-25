@@ -5,6 +5,7 @@
 #include "rc_car/RSRMsg.h"
 #include "rc_car/debugmsg.h"
 #include "rc_car/SwitchMsg.h"
+#include "rc_car/InterfaceMsg.h"
 #include "rc_car/waypoint.h"
 #include <nav_msgs/Odometry.h>
 #include <rc_car/YPR.h>
@@ -161,11 +162,13 @@ int main(int argc, char **argv)
  	 ros::Subscriber timu = n.subscribe("imu", 1, imu);
  	 ros::Subscriber tswitch = n.subscribe("tSwitchMode", 1, Switch);
    ros::Publisher command_pub = n.advertise<rc_car::Command>("tCommand", 1);
+   ros::Publisher interface_pub = n.advertise<rc_car::InterfaceMsg>("tInterface", 1);
    debugmsg_pub = n.advertise<rc_car::debugmsg>("tDebug", 100);
 
 
    ros::Rate loop_rate(10);
    rc_car::Command cmd;
+   rc_car::InterfaceMsg interface;
   double Rayon_max=3;
   double Couloir_max=4;
   double theta_des;
@@ -238,6 +241,9 @@ cmd.dir=0;
         OA[1]=OM_GLOB[1];
         ROS_INFO("criterePerp");
     }
+    interface.waypointTotal=srv.response.total;
+    interface.waypointEnCours=count+1;
+    interface_pub.publish(interface);
 
 
  //ROS_INFO("OM1: %f  OM2: %f OA1: %f OA1: %f OB1: %f OB2: %f  \n", OM_GLOB[0],OM_GLOB[1],OA[0],OA[1],OB[0],OB[1]);

@@ -1,0 +1,2 @@
+int64 waypointTotal
+int64 waypointEnCours

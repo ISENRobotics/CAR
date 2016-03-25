@@ -4,6 +4,7 @@
 import rospy
 
 from rc_car.msg import SwitchMsg
+from rc_car.msg import InterfaceMsg
 
 import sys, select, termios, tty
 
@@ -17,7 +18,8 @@ RC CAR!
 CTRL-C to quit
 """
 
-
+def callbackint(data):
+    rospy.loginfo("nb waypoint : %s   waypoint en cours : %s", data.waypointTotal,data.waypointEnCours)
 
 def getKey():
     tty.setraw(sys.stdin.fileno())
@@ -39,6 +41,7 @@ if __name__=="__main__":
     
     rospy.init_node('interface')
     pubmode = rospy.Publisher('tSwitchMode', SwitchMsg, queue_size=1)
+    rospy.Subscriber("tInterface", InterfaceMsg, callbackint)
 
     mode = SwitchMsg()
     mode.modeAuto=False

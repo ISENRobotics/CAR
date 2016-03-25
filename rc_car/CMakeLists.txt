@@ -27,6 +27,7 @@ find_package(Boost COMPONENTS bind)
    GPSFix.msg
    GPSStatus.msg
    debugmsg.msg
+   InterfaceMsg.msg
  )
 
 ## Generate services in the 'srv' folder
