@@ -24,6 +24,7 @@ if ! id | grep -q root; then
 	echo "must be run as root"
 	exit
 fi
+python init.py 
 
 ecapvar=`cat ./pwmswitch.txt`
 ehrpwmvar=`cat ./pwmservo.txt`
@@ -147,3 +148,4 @@ sleep 1
 
 #echo "PWM: all PWM's off"
 
+echo ok > testtt
